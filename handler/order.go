@@ -1,6 +1,9 @@
 package handler
 
-import "log"
+import (
+	"gorm.io/gorm"
+	"parking/model"
+)
 
 func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
@@ -23,22 +26,6 @@ func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 }
 
 func GetUserList() ([]model.User, error) {
-	parentSpan := opentracing.SpanFromContext(ctx)
-	parentSpan.SetTag("endpoint", "server")
-	dbSpan := opentracing.GlobalTracer().StartSpan("查询数据库", opentracing.ChildOf(parentSpan.Context()))
-	log.Println("用户列表")
-	var user []model.User
-	page := int(req.Pn)
-	pageSize := int(req.PSize)
-	result := Paginate(page, pageSize)(global.DB).Find(&user)
-	dbSpan.Finish()
-	packSpan := opentracing.GlobalTracer().StartSpan("打包数据", opentracing.ChildOf(parentSpan.Context()))
-	rsp := &proto.UserListResponse{}
-	rsp.Total = int32(result.RowsAffected)
-	for _, v := range user {
-		newRsp := ModelToResponse(v)
-		rsp.Data = append(rsp.Data, &newRsp)
-	}
-	packSpan.Finish()
-	return rsp, nil
+
+	return nil, nil
 }

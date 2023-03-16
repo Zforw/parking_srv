@@ -5,7 +5,8 @@ import (
 	"parking/model"
 )
 
-func CreateUser(user *model.User) error {
+func CreateUser(openid string) error {
+	user := model.User{OpenId: openid}
 	global.DB.Create(&user)
 	return nil
 }

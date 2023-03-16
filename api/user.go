@@ -2,7 +2,22 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"parking/form"
+	"parking/handler"
 )
+
+func CreateUser(ctx *gin.Context) {
+	u := form.CreateUserForm{}
+	err := handler.CreateUser(u.OpenId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+}
 
 func GetUserList(ctx *gin.Context) {
 
