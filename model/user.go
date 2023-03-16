@@ -6,6 +6,10 @@ type User struct {
 	OpenId string `gorm:"type:varchar(20)"` //用户的OpenId
 }
 
+type UserResp struct {
+	OpenId string `json:"id"` //用户的OpenId
+}
+
 func (User) TableName() string {
 	return "user"
 }
