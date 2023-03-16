@@ -17,7 +17,8 @@ type BaseModel struct {
 type OrderInfo struct {
 	BaseModel
 
-	User    User   //用户对象
+	UserID  int32
+	User    User   `gorm:"foreignKey:UserID"`
 	OrderSn string `gorm:"type:varchar(30);index"` //订单号，自己生成的订单号
 	PayType string `gorm:"type:varchar(20) comment 'alipay(支付宝)， wechat(微信)，cash(现金)'"`
 
