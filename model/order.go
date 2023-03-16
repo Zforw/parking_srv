@@ -27,7 +27,8 @@ type OrderInfo struct {
 	StartTime  *time.Time `gorm:"type:datetime"` //开始时间
 	PayTime    *time.Time `gorm:"type:datetime"` //结束时间
 
-	License License //车牌对象
+	LicenseID int32
+	License   License `gorm:"foreignKey:LicenseID"`
 }
 
 func (OrderInfo) TableName() string {
