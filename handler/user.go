@@ -30,8 +30,8 @@ func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 func CreateUser(openid string) error {
 	zap.S().Info("创建用户")
 	user := model.User{OpenId: openid}
-	global.DB.Create(&user)
-	return nil
+	res := global.DB.Create(&user)
+	return res.Error
 }
 
 func GetUserList(pn, psize int) ([]model.User, int) {

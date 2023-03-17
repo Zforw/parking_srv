@@ -15,6 +15,7 @@ func CreateUser(ctx *gin.Context) {
 		zap.S().Error(err.Error())
 		return
 	}
+	zap.S().Info(u.OpenId)
 	err := handler.CreateUser(u.OpenId)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -28,6 +29,7 @@ func CreateUser(ctx *gin.Context) {
 func GetUserList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
+	zap.S().Info(pn, pSize)
 	data, count := handler.GetUserList(pn, pSize)
 	ctx.JSON(http.StatusOK, gin.H{
 		"count": count,
