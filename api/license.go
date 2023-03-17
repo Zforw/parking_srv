@@ -18,6 +18,7 @@ func CreateLicense(ctx *gin.Context) {
 	zap.S().Info(l)
 	err := handler.CreateLicense(l.Number, l.OpenId)
 	if err != nil {
+		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -35,6 +36,7 @@ func UpdateLicense(ctx *gin.Context) {
 	zap.S().Info(l)
 	err := handler.UpdateLicense(l.Number, l.Status)
 	if err != nil {
+		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})

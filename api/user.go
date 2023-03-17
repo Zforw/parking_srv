@@ -18,6 +18,7 @@ func CreateUser(ctx *gin.Context) {
 	zap.S().Info(u.OpenId)
 	err := handler.CreateUser(u.OpenId)
 	if err != nil {
+		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})

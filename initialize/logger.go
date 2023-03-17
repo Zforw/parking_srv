@@ -19,7 +19,7 @@ func getEncoder() zapcore.Encoder {
 func getLogWriter() zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
 		Filename: global.NacosConfig.LogFilePath +
-			fmt.Sprintf("mylog-%s.log", time.Now().Format("2006-01-02 15:04:05")),
+			fmt.Sprintf("mylog-%s.log", time.Now().Format("2006-01-02::15:04:05")),
 		MaxSize:    10,
 		MaxBackups: 5,
 		MaxAge:     30,
