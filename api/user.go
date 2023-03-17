@@ -15,7 +15,7 @@ func CreateUser(ctx *gin.Context) {
 		zap.S().Error(err.Error())
 		return
 	}
-	zap.S().Info(u.OpenId)
+	zap.S().Info("创建用户 ", u.OpenId)
 	err := handler.CreateUser(u.OpenId)
 	if err != nil {
 		zap.S().Error(err.Error())
@@ -30,7 +30,7 @@ func CreateUser(ctx *gin.Context) {
 func GetUserList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
-	zap.S().Info(pn, pSize)
+	zap.S().Info("获取用户列表, pn=", pn, "psize=", pSize)
 	data, count, err := handler.GetUserList(pn, pSize)
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{

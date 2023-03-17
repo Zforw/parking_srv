@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"go.uber.org/zap"
 	"parking/global"
 	"parking/model"
 )
@@ -40,7 +39,6 @@ func UpdateLicense(number string, status string) error {
 }
 
 func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
-	zap.S().Info("车牌列表")
 	var licenses []model.License
 	result := global.DB.Preload("User").Scopes(Paginate(pn, psize)).Find(&licenses)
 	var data []model.LicenseResp
