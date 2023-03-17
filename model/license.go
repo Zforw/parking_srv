@@ -9,6 +9,12 @@ type License struct {
 	Status string `gorm:"type:varchar(20)  comment 'IN(进入), OUT(离开)'"`
 }
 
+type LicenseResp struct {
+	Number string `json:"number"`
+	OpenId string `json:"id"`
+	Status string `json:"status"`
+}
+
 func (License) TableName() string {
 	return "license"
 }

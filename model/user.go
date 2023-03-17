@@ -3,7 +3,7 @@ package model
 // User 用户
 type User struct {
 	BaseModel
-	OpenId string `gorm:"type:varchar(20)"` //用户的OpenId
+	OpenId string `gorm:"type:varchar(40)"` //用户的OpenId
 }
 
 type UserResp struct {

@@ -13,6 +13,14 @@ func InitUserRouter(group *gin.RouterGroup) {
 		//UserRouter.GET("list", middlewares.JWTAuth(), middlewares.IsAdminAuth(), api.GetUserList)
 		UserRouter.POST("add", api.CreateUser)
 		UserRouter.GET("list", api.GetUserList)
-		UserRouter.POST("update", api.UpdateUser)
+	}
+}
+
+func InitLicenseRouter(group *gin.RouterGroup) {
+	LicenseRouter := group.Group("l")
+	zap.S().Debug("配置车牌相关的URL")
+	{
+		LicenseRouter.POST("add", api.CreateLicense)
+		LicenseRouter.GET("list", api.GetLicenseList)
 	}
 }

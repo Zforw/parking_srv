@@ -36,7 +36,3 @@ func GetUserList(ctx *gin.Context) {
 		"data":  data,
 	})
 }
-
-func UpdateUser(ctx *gin.Context) {
-
-}
