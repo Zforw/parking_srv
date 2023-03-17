@@ -11,15 +11,18 @@ func CreateLicense(number string, openid string) error {
 	user := model.User{
 		OpenId: openid,
 	}
+	license := model.License{
+		Number: number,
+	}
 	if result := global.DB.First(&user); result.RowsAffected == 0 {
 		return errors.New("用户不存在")
 	}
-	license := model.License{
-		Number: number,
-		UserID: user.ID,
-		User:   user,
-		Status: "OUT",
+	if result := global.DB.Where("number=?", number).First(&license); result.RowsAffected != 0 {
+		return errors.New("车牌已存在")
 	}
+	license.UserID = user.ID
+	license.User = user
+	license.Status = "OUT"
 	res := global.DB.Create(&license)
 	return res.Error
 }
