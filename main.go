@@ -13,8 +13,8 @@ import (
 )
 
 func main() {
-	initialize.InitLogger()
 	initialize.InitConfig()
+	initialize.InitLogger()
 	initialize.InitDB()
 	Router := initialize.Routers()
 	srv := &http.Server{
