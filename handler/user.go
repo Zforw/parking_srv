@@ -38,7 +38,7 @@ func CreateUser(openid string) error {
 	return res.Error
 }
 
-func GetUserList(pn, psize int) ([]model.UserResp, int) {
+func GetUserList(pn, psize int) ([]model.UserResp, int, error) {
 	zap.S().Info("用户列表")
 	var users []model.User
 	result := Paginate(pn, psize)(global.DB).Find(&users)
@@ -47,5 +47,5 @@ func GetUserList(pn, psize int) ([]model.UserResp, int) {
 		data = append(data, model.UserResp{OpenId: v.OpenId})
 	}
 	count := int(result.RowsAffected)
-	return data, count
+	return data, count, result.Error
 }

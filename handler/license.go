@@ -39,7 +39,7 @@ func UpdateLicense(number string, status string) error {
 	return res.Error
 }
 
-func GetLicenseList(pn, psize int) ([]model.LicenseResp, int) {
+func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
 	zap.S().Info("车牌列表")
 	var licenses []model.License
 	result := global.DB.Preload("User").Scopes(Paginate(pn, psize)).Find(&licenses)
@@ -52,5 +52,5 @@ func GetLicenseList(pn, psize int) ([]model.LicenseResp, int) {
 		})
 	}
 	count := int(result.RowsAffected)
-	return data, count
+	return data, count, result.Error
 }

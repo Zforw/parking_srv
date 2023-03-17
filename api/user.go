@@ -31,9 +31,17 @@ func GetUserList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
 	zap.S().Info(pn, pSize)
-	data, count := handler.GetUserList(pn, pSize)
-	ctx.JSON(http.StatusOK, gin.H{
-		"count": count,
-		"data":  data,
-	})
+	data, count, err := handler.GetUserList(pn, pSize)
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"count": count,
+			"data":  data,
+		})
+	} else {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusOK, gin.H{
+			"count": count,
+			"data":  data,
+		})
+	}
 }
