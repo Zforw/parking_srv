@@ -27,6 +27,18 @@ func CreateLicense(number string, openid string) error {
 	return res.Error
 }
 
+func UpdateLicense(number string, status string) error {
+	license := model.License{
+		Number: number,
+	}
+	if result := global.DB.Where("number=?", number).First(&license); result.RowsAffected == 0 {
+		return errors.New("车牌不存在")
+	}
+	license.Status = status
+	res := global.DB.Save(&license)
+	return res.Error
+}
+
 func GetLicenseList(pn, psize int) ([]model.LicenseResp, int) {
 	zap.S().Info("车牌列表")
 	var licenses []model.License

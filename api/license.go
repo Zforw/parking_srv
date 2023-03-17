@@ -26,6 +26,23 @@ func CreateLicense(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{})
 }
 
+func UpdateLicense(ctx *gin.Context) {
+	l := form.UpdateLicenseForm{}
+	if err := ctx.ShouldBind(&l); err != nil {
+		zap.S().Error(err.Error())
+		return
+	}
+	zap.S().Info(l)
+	err := handler.UpdateLicense(l.Number, l.Status)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+}
+
 func GetLicenseList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))

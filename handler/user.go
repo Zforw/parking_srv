@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"parking/global"
@@ -30,6 +31,9 @@ func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 func CreateUser(openid string) error {
 	zap.S().Info("创建用户")
 	user := model.User{OpenId: openid}
+	if result := global.DB.Where("open_id=?", openid).First(&user); result.RowsAffected != 0 {
+		return errors.New("用户已存在")
+	}
 	res := global.DB.Create(&user)
 	return res.Error
 }

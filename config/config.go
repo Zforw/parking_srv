@@ -14,9 +14,10 @@ type ServerConfig struct {
 }
 
 type NacosConfig struct {
-	Host      string `mapstructure:"host"`
-	Port      int32  `mapstructure:"port"`
-	NameSpace string `mapstructure:"namespace"`
-	DataId    string `mapstructure:"dataid"`
-	Group     string `mapstructure:"group"`
+	Host        string `mapstructure:"host"`
+	Port        int32  `mapstructure:"port"`
+	NameSpace   string `mapstructure:"namespace"`
+	DataId      string `mapstructure:"dataid"`
+	Group       string `mapstructure:"group"`
+	LogFilePath string `mapstructure:"log"`
 }

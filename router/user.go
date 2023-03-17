@@ -21,6 +21,7 @@ func InitLicenseRouter(group *gin.RouterGroup) {
 	zap.S().Debug("配置车牌相关的URL")
 	{
 		LicenseRouter.POST("add", api.CreateLicense)
+		LicenseRouter.POST("update", api.UpdateLicense)
 		LicenseRouter.GET("list", api.GetLicenseList)
 	}
 }
