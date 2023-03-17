@@ -1,18 +1,11 @@
 package config
 
-type DatabaseConfig struct {
-	User    string `json:"user"`
-	License string `json:"license"`
-	Order   string `json:"order"`
-	Spot    string `json:"spot"`
-}
-
 type MySqlConfig struct {
-	Host string         `json:"host"`
-	Port int32          `json:"port"`
-	User string         `json:"user"`
-	Pass string         `json:"pass"`
-	DB   DatabaseConfig `json:"db"`
+	Host string `json:"host"`
+	Port int32  `json:"port"`
+	User string `json:"user"`
+	Pass string `json:"pass"`
+	DB   string `json:"db"`
 }
 
 type ServerConfig struct {
