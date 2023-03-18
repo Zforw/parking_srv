@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"parking/form"
 	"parking/handler"
+	"parking/utils"
 	"strconv"
 )
 
@@ -13,6 +14,7 @@ func CreateLicense(ctx *gin.Context) {
 	l := form.CreateLicenseForm{}
 	if err := ctx.ShouldBind(&l); err != nil {
 		zap.S().Error(err.Error())
+		utils.HandleValidatorError(ctx, err)
 		return
 	}
 	zap.S().Info("创建车牌 ", l)
@@ -33,9 +35,7 @@ func UpdateLicense(ctx *gin.Context) {
 	l := form.UpdateLicenseForm{}
 	if err := ctx.ShouldBind(&l); err != nil {
 		zap.S().Error(err.Error())
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		utils.HandleValidatorError(ctx, err)
 		return
 	}
 	zap.S().Info("更新车牌 ", l)

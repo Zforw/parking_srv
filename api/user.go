@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"parking/form"
 	"parking/handler"
+	"parking/utils"
 	"strconv"
 )
 
@@ -13,6 +14,7 @@ func CreateUser(ctx *gin.Context) {
 	u := form.CreateUserForm{}
 	if err := ctx.ShouldBind(&u); err != nil {
 		zap.S().Error(err.Error())
+		utils.HandleValidatorError(ctx, err)
 		return
 	}
 	zap.S().Info("创建用户 ", u.OpenId)
