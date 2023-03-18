@@ -8,6 +8,13 @@ import (
 	"strings"
 )
 
+func Struct2String(fields map[string]string) string {
+	for _, err := range fields {
+		return err
+	}
+	return ""
+}
+
 func RemoveTopStruct(fields map[string]string) map[string]string {
 	rsp := map[string]string{}
 	for field, err := range fields {
@@ -25,6 +32,6 @@ func HandleValidatorError(ctx *gin.Context, err error) {
 		return
 	}
 	ctx.JSON(http.StatusBadRequest, gin.H{
-		"error": RemoveTopStruct(errs.Translate(global.Trans)),
+		"error": Struct2String(RemoveTopStruct(errs.Translate(global.Trans))),
 	})
 }
