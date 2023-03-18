@@ -13,7 +13,6 @@ import (
 func CreateLicense(ctx *gin.Context) {
 	l := form.CreateLicenseForm{}
 	if err := ctx.ShouldBind(&l); err != nil {
-		zap.S().Error(err.Error())
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
@@ -34,7 +33,6 @@ func CreateLicense(ctx *gin.Context) {
 func UpdateLicense(ctx *gin.Context) {
 	l := form.UpdateLicenseForm{}
 	if err := ctx.ShouldBind(&l); err != nil {
-		zap.S().Error(err.Error())
 		utils.HandleValidatorError(ctx, err)
 		return
 	}

@@ -13,7 +13,6 @@ import (
 func CreateUser(ctx *gin.Context) {
 	u := form.CreateUserForm{}
 	if err := ctx.ShouldBind(&u); err != nil {
-		zap.S().Error(err.Error())
 		utils.HandleValidatorError(ctx, err)
 		return
 	}

@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"go.uber.org/zap"
 	"net/http"
 	"parking/global"
 	"strings"
@@ -31,8 +32,10 @@ func HandleValidatorError(ctx *gin.Context, err error) {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
+		zap.S().Error(err.Error())
 		return
 	}
+	zap.S().Error(Struct2String(RemoveTopStruct(errs.Translate(global.Trans))))
 	ctx.JSON(http.StatusBadRequest, gin.H{
 		"error": Struct2String(RemoveTopStruct(errs.Translate(global.Trans))),
 	})
