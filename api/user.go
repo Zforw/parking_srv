@@ -33,12 +33,11 @@ func GetUserList(ctx *gin.Context) {
 	zap.S().Info("获取用户列表, pn=", pn, "psize=", pSize)
 	data, count, err := handler.GetUserList(pn, pSize)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{
-			"count": count,
-			"data":  data,
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 	} else {
-		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusOK, gin.H{
 			"count": count,
 			"data":  data,
