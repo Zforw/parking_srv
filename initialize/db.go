@@ -2,6 +2,7 @@ package initialize
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -34,6 +35,7 @@ func InitDB() {
 		Logger: newLogger,
 	})
 	if err != nil {
+		zap.S().Error(err.Error())
 		panic(err)
 	}
 }

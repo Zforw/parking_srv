@@ -19,9 +19,10 @@ func RemoveTopStruct(fields map[string]string) map[string]string {
 func HandleValidatorError(ctx *gin.Context, err error) {
 	errs, ok := err.(validator.ValidationErrors)
 	if !ok {
-		ctx.JSON(http.StatusOK, gin.H{
-			"msg": err.Error(),
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 		})
+		return
 	}
 	ctx.JSON(http.StatusBadRequest, gin.H{
 		"error": RemoveTopStruct(errs.Translate(global.Trans)),

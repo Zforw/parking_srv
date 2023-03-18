@@ -16,6 +16,7 @@ func main() {
 	initialize.InitConfig()
 	initialize.InitLogger()
 	initialize.InitDB()
+	initialize.InitValidator()
 	Router := initialize.Routers()
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", 35491),
