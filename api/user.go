@@ -26,7 +26,7 @@ func CreateUser(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"error": nil,
+		"error": "",
 	})
 }
 
@@ -46,7 +46,7 @@ func GetUserList(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"count": count,
 			"data":  data,
-			"error": nil,
+			"error": "",
 		})
 	}
 }
