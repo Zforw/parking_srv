@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"go.uber.org/zap"
 	"parking/global"
 	"parking/model"
 )
@@ -33,7 +34,9 @@ func UpdateLicense(number string, status string) error {
 	if result := global.DB.Where("number=?", number).First(&license); result.RowsAffected == 0 {
 		return errors.New("车牌不存在")
 	}
+	zap.S().Info(license)
 	license.Status = status
+	zap.S().Info(license)
 	res := global.DB.Save(&license)
 	return res.Error
 }

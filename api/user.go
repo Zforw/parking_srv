@@ -24,7 +24,9 @@ func CreateUser(ctx *gin.Context) {
 		})
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{})
+	ctx.JSON(http.StatusOK, gin.H{
+		"error": nil,
+	})
 }
 
 func GetUserList(ctx *gin.Context) {
@@ -35,12 +37,15 @@ func GetUserList(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"count": 0,
+			"data":  nil,
 			"error": err.Error(),
 		})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
 			"count": count,
 			"data":  data,
+			"error": nil,
 		})
 	}
 }
