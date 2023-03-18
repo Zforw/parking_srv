@@ -10,10 +10,8 @@ import (
 )
 
 func Struct2String(fields map[string]string) string {
-	for filed, err := range fields {
-		if filed == "Status" {
-			return err
-		}
+	for _, err := range fields {
+		return err
 	}
 	return "Unknown error"
 }
