@@ -3,4 +3,4 @@ port: 8848
 namespace: '15643274-2b8a-49a0-b2cc-7cee10988556'
 dataid: 'server'
 group: 'parking'
-log: '/home/zforw/mylogs'
+log: '/home/zforw/mylogs/'
