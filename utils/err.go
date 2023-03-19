@@ -12,9 +12,9 @@ import (
 func Struct2String(fields map[string]string) string {
 	errs := ""
 	for _, err := range fields {
-		errs += err + ","
+		errs += err + ", "
 	}
-	return errs
+	return errs[:len(errs)-2]
 }
 
 func RemoveTopStruct(fields map[string]string) map[string]string {
