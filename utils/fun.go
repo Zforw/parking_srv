@@ -12,7 +12,7 @@ import (
 func Struct2String(fields map[string]string) string {
 	errs := ""
 	for _, err := range fields {
-		errs += err
+		errs += err + ","
 	}
 	return errs
 }
