@@ -15,6 +15,11 @@ type LicenseResp struct {
 	Status string `json:"status"`
 }
 
+type UserLicenseResp struct {
+	Number string `json:"number"`
+	Status string `json:"status"`
+}
+
 func (License) TableName() string {
 	return "license"
 }

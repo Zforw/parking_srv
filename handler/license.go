@@ -13,7 +13,7 @@ func CreateLicense(number string, openid string) error {
 	license := model.License{
 		Number: number,
 	}
-	if result := global.DB.First(&user); result.RowsAffected == 0 {
+	if result := global.DB.Where("open_id=?", openid).First(&user); result.RowsAffected == 0 {
 		return errors.New("用户不存在")
 	}
 	if result := global.DB.Where("number=?", number).First(&license); result.RowsAffected != 0 {
@@ -46,6 +46,20 @@ func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
 		data = append(data, model.LicenseResp{
 			Number: v.Number,
 			OpenId: v.User.OpenId,
+			Status: v.Status,
+		})
+	}
+	count := int(result.RowsAffected)
+	return data, count, result.Error
+}
+
+func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int, error) {
+	var licenses []model.License
+	result := global.DB.Preload("User").Scopes(Paginate(pn, psize)).Find(&licenses)
+	var data []model.UserLicenseResp
+	for _, v := range licenses {
+		data = append(data, model.UserLicenseResp{
+			Number: v.Number,
 			Status: v.Status,
 		})
 	}

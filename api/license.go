@@ -70,3 +70,25 @@ func GetLicenseList(ctx *gin.Context) {
 		})
 	}
 }
+
+func GetUserLicenseList(ctx *gin.Context) {
+	id := ctx.DefaultQuery("id", "")
+	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
+	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
+	zap.S().Info("获取指定用户车牌列表, pn=", pn, "psize=", pSize)
+	data, count, err := handler.GetUserLicenseList(id, pn, pSize)
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"count": 0,
+			"data":  nil,
+			"error": err.Error(),
+		})
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{
+			"count": count,
+			"data":  data,
+			"error": "",
+		})
+	}
+}
