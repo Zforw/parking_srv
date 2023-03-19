@@ -13,5 +13,6 @@ func InitLicenseRouter(group *gin.RouterGroup) {
 		LicenseRouter.POST("add", api.CreateLicense)
 		LicenseRouter.POST("update", api.UpdateLicense)
 		LicenseRouter.GET("list", api.GetLicenseList)
+		LicenseRouter.GET("ulist", api.GetUserLicenseList)
 	}
 }

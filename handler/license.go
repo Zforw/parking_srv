@@ -55,7 +55,9 @@ func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
 
 func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int, error) {
 	var licenses []model.License
-	result := global.DB.Preload("User").Scopes(Paginate(pn, psize)).Find(&licenses)
+	localDB := global.DB.Model(model.License{})
+	localDB = localDB.Where("id=?", id)
+	result := localDB.Scopes(Paginate(pn, psize)).Find(&licenses)
 	var data []model.UserLicenseResp
 	for _, v := range licenses {
 		data = append(data, model.UserLicenseResp{
