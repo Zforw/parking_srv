@@ -37,7 +37,7 @@ func UpdateSpot(ctx *gin.Context) {
 		return
 	}
 	zap.S().Info("更新停车位 ", l)
-	err := handler.UpdateLicense(l.Number, l.Status)
+	err := handler.UpdateSpot(l.Number, l.Status)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -54,7 +54,7 @@ func GetSpotList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
 	zap.S().Info("获取停车位列表, pn=", pn, "psize=", pSize)
-	data, count, err := handler.GetLicenseList(pn, pSize)
+	data, count, err := handler.GetSpotList(pn, pSize)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
