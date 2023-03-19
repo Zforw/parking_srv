@@ -16,7 +16,7 @@ func CreateUser(ctx *gin.Context) {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
-	zap.S().Info("创建用户 ", u.OpenId)
+	zap.S().Info("创建用户 ", u)
 	err := handler.CreateUser(u.OpenId)
 	if err != nil {
 		zap.S().Error(err.Error())

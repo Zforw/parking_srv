@@ -30,10 +30,11 @@ func main() {
 	}()
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
+	re := <-quit
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
 		zap.S().Fatal(err)
 	}
+	zap.S().Info("已停止， 监听信号: ", re)
 }

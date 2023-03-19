@@ -10,10 +10,11 @@ import (
 )
 
 func Struct2String(fields map[string]string) string {
+	errs := ""
 	for _, err := range fields {
-		return err
+		errs += err
 	}
-	return "Unknown error"
+	return errs
 }
 
 func RemoveTopStruct(fields map[string]string) map[string]string {
@@ -33,8 +34,9 @@ func HandleValidatorError(ctx *gin.Context, err error) {
 		zap.S().Error(err.Error())
 		return
 	}
-	zap.S().Error(Struct2String(RemoveTopStruct(errs.Translate(global.Trans))))
+	er := Struct2String(RemoveTopStruct(errs.Translate(global.Trans)))
+	zap.S().Error(er)
 	ctx.JSON(http.StatusBadRequest, gin.H{
-		"error": Struct2String(RemoveTopStruct(errs.Translate(global.Trans))),
+		"error": er,
 	})
 }

@@ -6,17 +6,18 @@ import (
 	"net/http"
 	"parking/form"
 	"parking/handler"
+	"parking/utils"
 	"strconv"
 )
 
 func CreateSpot(ctx *gin.Context) {
-	l := form.CreateLicenseForm{}
-	if err := ctx.ShouldBind(&l); err != nil {
-		zap.S().Error(err.Error())
+	s := form.CreateSpotForm{}
+	if err := ctx.ShouldBind(&s); err != nil {
+		utils.HandleValidatorError(ctx, err)
 		return
 	}
-	zap.S().Info("创建停车位 ", l)
-	err := handler.CreateLicense(l.Number, l.OpenId)
+	zap.S().Info("创建停车位 ", s)
+	err := handler.CreateSpot(s.SpotNo, s.X, s.Y)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -32,7 +33,7 @@ func CreateSpot(ctx *gin.Context) {
 func UpdateSpot(ctx *gin.Context) {
 	l := form.UpdateLicenseForm{}
 	if err := ctx.ShouldBind(&l); err != nil {
-		zap.S().Error(err.Error())
+		utils.HandleValidatorError(ctx, err)
 		return
 	}
 	zap.S().Info("更新停车位 ", l)

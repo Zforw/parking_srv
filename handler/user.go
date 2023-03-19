@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"parking/global"
 	"parking/model"
@@ -13,7 +12,6 @@ func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 		if page == 0 {
 			page = 1
 		}
-
 		switch {
 		case pageSize > 100:
 			pageSize = 100
@@ -29,7 +27,6 @@ func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 }
 
 func CreateUser(openid string) error {
-	zap.S().Info("创建用户")
 	user := model.User{OpenId: openid}
 	if result := global.DB.Where("open_id=?", openid).First(&user); result.RowsAffected != 0 {
 		return errors.New("用户已存在")
@@ -39,7 +36,6 @@ func CreateUser(openid string) error {
 }
 
 func GetUserList(pn, psize int) ([]model.UserResp, int, error) {
-	zap.S().Info("用户列表")
 	var users []model.User
 	result := Paginate(pn, psize)(global.DB).Find(&users)
 	var data []model.UserResp
