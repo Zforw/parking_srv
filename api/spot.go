@@ -26,7 +26,7 @@ func CreateSpot(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"error": nil,
+		"error": "",
 	})
 }
 
@@ -46,7 +46,7 @@ func UpdateSpot(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"error": nil,
+		"error": "",
 	})
 }
 
@@ -66,7 +66,7 @@ func GetSpotList(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"count": count,
 			"data":  data,
-			"error": nil,
+			"error": "",
 		})
 	}
 }
