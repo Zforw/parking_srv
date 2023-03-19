@@ -43,6 +43,6 @@ func main() {
 		panic(err)
 	}
 
-	_ = db.AutoMigrate(&model.User{}, &model.License{}, &model.License{}, &model.OrderInfo{})
-
+	//_ = db.AutoMigrate(&model.User{}, &model.License{}, &model.Spot{}, &model.OrderInfo{})
+	_ = db.AutoMigrate(&model.Spot{})
 }

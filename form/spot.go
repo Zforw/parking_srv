@@ -2,8 +2,8 @@ package form
 
 type CreateSpotForm struct {
 	SpotNo string  `json:"number" binding:"required"`
-	X      float64 `json:"x" binding:"required"`
-	Y      float64 `json:"y" binding:"required"`
+	Lat    float64 `json:"lat" binding:"required"`
+	Lgt    float64 `json:"lgt" binding:"required"`
 }
 
 type UpdateSpotForm struct {

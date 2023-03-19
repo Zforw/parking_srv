@@ -17,7 +17,7 @@ func CreateSpot(ctx *gin.Context) {
 		return
 	}
 	zap.S().Info("创建停车位 ", s)
-	err := handler.CreateSpot(s.SpotNo, s.X, s.Y)
+	err := handler.CreateSpot(s.SpotNo, s.Lat, s.Lgt)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
