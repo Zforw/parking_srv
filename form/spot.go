@@ -7,8 +7,6 @@ type CreateSpotForm struct {
 }
 
 type UpdateSpotForm struct {
-	SpotNo string  `json:"number" binding:"required"`
-	Status string  `json:"status" binding:"required,oneof=TU NTU"`
-	X      float64 `json:"x"`
-	Y      float64 `json:"y"`
+	SpotNo string `json:"number" binding:"required"`
+	Status string `json:"status" binding:"required,oneof=TU NTU"`
 }

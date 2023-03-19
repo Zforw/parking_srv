@@ -31,13 +31,13 @@ func CreateSpot(ctx *gin.Context) {
 }
 
 func UpdateSpot(ctx *gin.Context) {
-	l := form.UpdateLicenseForm{}
+	l := form.UpdateSpotForm{}
 	if err := ctx.ShouldBind(&l); err != nil {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
-	zap.S().Info("更新停车位 ", l)
-	err := handler.UpdateSpot(l.Number, l.Status)
+	zap.S().Info("更新停车位状态 ", l)
+	err := handler.UpdateSpot(l.SpotNo, l.Status)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
