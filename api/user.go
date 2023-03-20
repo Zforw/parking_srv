@@ -78,8 +78,7 @@ func Login(ctx *gin.Context) {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
-	ad.Pass = utils.EncryptPass(ad.Pass)
-	zap.S().Info("【管理员登录】 ", ad)
+	zap.S().Info("【管理员登录】 ", ad.OpenId)
 	err := handler.Login(ad.OpenId, ad.Pass)
 	if err != nil {
 		zap.S().Error(err.Error())
