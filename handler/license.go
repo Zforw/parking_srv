@@ -56,7 +56,7 @@ func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
 func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int, error) {
 	var user model.User
 	localDB := global.DB.Model(model.License{})
-	if result := localDB.Where("open_id=?", id).First(user); result.RowsAffected == 0 {
+	if result := localDB.Where("open_id=?", id).First(&user); result.RowsAffected == 0 {
 		return nil, 0, errors.New("用户不存在")
 	}
 	var licenses []model.License
