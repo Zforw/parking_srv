@@ -16,7 +16,7 @@ func CreateSpot(ctx *gin.Context) {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
-	zap.S().Info("创建停车位 ", s)
+	zap.S().Info("【创建停车位】 ", s)
 	err := handler.CreateSpot(s.SpotNo, s.Lat, s.Lgt)
 	if err != nil {
 		zap.S().Error(err.Error())
@@ -36,7 +36,7 @@ func UpdateSpot(ctx *gin.Context) {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
-	zap.S().Info("更新停车位状态 ", l)
+	zap.S().Info("【更新停车位状态】 ", l)
 	err := handler.UpdateSpot(l.SpotNo, l.Status)
 	if err != nil {
 		zap.S().Error(err.Error())
@@ -53,7 +53,7 @@ func UpdateSpot(ctx *gin.Context) {
 func GetSpotList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
-	zap.S().Info("获取停车位列表, pn=", pn, "psize=", pSize)
+	zap.S().Info("【获取停车位列表】 pn=", pn, ", psize=", pSize)
 	data, count, err := handler.GetSpotList(pn, pSize)
 	if err != nil {
 		zap.S().Error(err.Error())

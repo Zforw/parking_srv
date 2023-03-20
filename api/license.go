@@ -16,7 +16,7 @@ func CreateLicense(ctx *gin.Context) {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
-	zap.S().Info("创建车牌 ", l)
+	zap.S().Info("【创建车牌】 ", l)
 	err := handler.CreateLicense(l.Number, l.OpenId)
 	if err != nil {
 		zap.S().Error(err.Error())
@@ -36,7 +36,7 @@ func UpdateLicense(ctx *gin.Context) {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
-	zap.S().Info("更新车牌 ", l)
+	zap.S().Info("【更新车牌】 ", l)
 	err := handler.UpdateLicense(l.Number, l.Status)
 	if err != nil {
 		zap.S().Error(err.Error())
@@ -53,7 +53,7 @@ func UpdateLicense(ctx *gin.Context) {
 func GetLicenseList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
-	zap.S().Info("获取车牌列表, pn=", pn, "psize=", pSize)
+	zap.S().Info("【获取车牌列表】 pn=", pn, ", psize=", pSize)
 	data, count, err := handler.GetLicenseList(pn, pSize)
 	if err != nil {
 		zap.S().Error(err.Error())
@@ -75,7 +75,7 @@ func GetUserLicenseList(ctx *gin.Context) {
 	id := ctx.DefaultQuery("id", "")
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
-	zap.S().Info("获取指定用户车牌列表, pn=", pn, "psize=", pSize)
+	zap.S().Info("【获取指定用户车牌列表】 pn=", pn, ", psize=", pSize)
 	data, count, err := handler.GetUserLicenseList(id, pn, pSize)
 	if err != nil {
 		zap.S().Error(err.Error())

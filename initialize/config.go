@@ -1,8 +1,10 @@
 package initialize
 
 import (
+	"crypto/sha512"
 	"encoding/json"
 	"fmt"
+	"github.com/anaskhan96/go-password-encoder"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/vo"
@@ -17,6 +19,7 @@ func GetEnvInfo(env string) bool {
 }
 
 func InitConfig() {
+	global.OP = &password.Options{SaltLen: 16, Iterations: 100, KeyLen: 32, HashFunction: sha512.New}
 	ConfigFile := "config.yaml"
 	v := viper.New()
 	v.SetConfigFile(ConfigFile)

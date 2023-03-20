@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"parking/global"
 	"parking/model"
+	"parking/utils"
 )
 
 func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
@@ -26,8 +27,8 @@ func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func CreateUser(openid string) error {
-	user := model.User{OpenId: openid}
+func CreateUser(auth int, openid, pass string) error {
+	user := model.User{OpenId: openid, Auth: auth, Pass: pass}
 	if result := global.DB.Where("open_id=?", openid).First(&user); result.RowsAffected != 0 {
 		return errors.New("用户已存在")
 	}
@@ -35,12 +36,23 @@ func CreateUser(openid string) error {
 	return res.Error
 }
 
+func Login(openid, pass string) error {
+	user := model.User{OpenId: openid}
+	if result := global.DB.Where("open_id=?", openid).First(&user); result.RowsAffected == 0 {
+		return errors.New("用户不存在")
+	}
+	if utils.VerifyPass(pass, user.Pass) {
+		return nil
+	}
+	return errors.New("用户名或密码错误")
+}
+
 func GetUserList(pn, psize int) ([]model.UserResp, int, error) {
 	var users []model.User
 	result := Paginate(pn, psize)(global.DB).Find(&users)
 	var data []model.UserResp
 	for _, v := range users {
-		data = append(data, model.UserResp{OpenId: v.OpenId})
+		data = append(data, model.UserResp{OpenId: v.OpenId, Auth: v.Auth})
 	}
 	count := int(result.RowsAffected)
 	return data, count, result.Error
