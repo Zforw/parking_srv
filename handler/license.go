@@ -54,13 +54,13 @@ func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
 }
 
 func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int, error) {
-	var licenses []model.License
+	var user model.User
 	localDB := global.DB.Model(model.License{})
-	localDB = localDB.Where("user_id=?", id)
-	if localDB.Error != nil {
-		return nil, 0, localDB.Error
+	if result := localDB.Where("open_id=?", id).First(user); result.RowsAffected == 0 {
+		return nil, 0, errors.New("用户不存在")
 	}
-	result := localDB.Scopes(Paginate(pn, psize)).Find(&licenses)
+	var licenses []model.License
+	result := localDB.Preload("User").Scopes(Paginate(pn, psize)).Find(&licenses)
 	var data []model.UserLicenseResp
 	for _, v := range licenses {
 		data = append(data, model.UserLicenseResp{
