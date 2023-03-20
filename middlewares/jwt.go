@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	"parking/form"
 	"parking/global"
@@ -27,6 +28,7 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		zap.S().Info(token)
 		j := NewJWT()
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(token)
@@ -40,7 +42,7 @@ func JWTAuth() gin.HandlerFunc {
 					return
 				}
 			}
-
+			zap.S().Error(err.Error())
 			c.JSON(http.StatusUnauthorized, "未登陆")
 			c.Abort()
 			return
