@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"parking/api"
+	"parking/middlewares"
 )
 
 func InitUserRouter(group *gin.RouterGroup) {
@@ -12,7 +13,7 @@ func InitUserRouter(group *gin.RouterGroup) {
 	{
 		//UserRouter.GET("list", middlewares.JWTAuth(), middlewares.IsAdminAuth(), api.GetUserList)
 		UserRouter.POST("add", api.CreateUser)
-		UserRouter.GET("list", api.GetUserList)
+		UserRouter.GET("list", middlewares.JWTAuth(), api.GetUserList)
 		UserRouter.POST("register", api.Register)
 		UserRouter.POST("login", api.Login)
 	}

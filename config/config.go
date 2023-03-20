@@ -8,9 +8,14 @@ type MySqlConfig struct {
 	DB   string `json:"db"`
 }
 
+type JWTConfig struct {
+	SigningKey string `json:"key"`
+}
+
 type ServerConfig struct {
 	Name      string      `json:"name"`
 	MySqlInfo MySqlConfig `json:"mysql"`
+	JWTInfo   JWTConfig   `json:"jwt"`
 }
 
 type NacosConfig struct {

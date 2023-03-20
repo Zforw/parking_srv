@@ -1,13 +1,16 @@
 package api
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
 	"parking/form"
 	"parking/handler"
+	"parking/middlewares"
 	"parking/utils"
 	"strconv"
+	"time"
 )
 
 func CreateUser(ctx *gin.Context) {
@@ -87,8 +90,28 @@ func Login(ctx *gin.Context) {
 		})
 		return
 	}
+	j := middlewares.NewJWT()
+	claims := form.CustomClaims{
+		ID:          ad.OpenId,
+		AuthorityID: 1,
+		StandardClaims: jwt.StandardClaims{
+			NotBefore: time.Now().Unix(),
+			ExpiresAt: time.Now().Unix() + 60*60*24*300, //3天过期
+			Issuer:    "ZHP",
+		},
+	}
+	token, err := j.CreateToken(claims)
+	if err != nil {
+		zap.S().Error("验证成功, 但生成token失败", err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": "生成token失败",
+		})
+		return
+	}
+	zap.S().Info("验证成功, 生成token", token)
 	ctx.JSON(http.StatusOK, gin.H{
 		"error": "",
-		"token": "",
+		"token": token,
 	})
+	zap.S().Info(ad.OpenId, "成功登录")
 }
