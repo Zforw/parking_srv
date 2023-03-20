@@ -12,7 +12,7 @@ func InitLicenseRouter(group *gin.RouterGroup) {
 	zap.S().Debug("配置车牌相关的URL")
 	{
 		LicenseRouter.POST("add", middlewares.JWTAuth(), api.CreateLicense)
-		LicenseRouter.POST("update", api.UpdateLicense)
+		LicenseRouter.POST("update", middlewares.JWTAuth(), api.UpdateLicense)
 		LicenseRouter.GET("list", api.GetLicenseList)
 		LicenseRouter.GET("ulist", api.GetUserLicenseList)
 	}
