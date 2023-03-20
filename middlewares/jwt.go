@@ -35,17 +35,29 @@ func JWTAuth() gin.HandlerFunc {
 		if err != nil {
 			if err == TokenExpired {
 				if err == TokenExpired {
-					c.JSON(http.StatusUnauthorized, map[string]string{
-						"msg": "授权已过期",
-					})
+					c.JSON(http.StatusUnauthorized,
+						gin.H{
+							"error": "授权已过期",
+						})
 					c.Abort()
 					return
 				}
 			}
 			zap.S().Error(err.Error())
-			c.JSON(http.StatusUnauthorized, "未登陆")
+			c.JSON(http.StatusUnauthorized,
+				gin.H{
+					"error": "未登陆" + err.Error(),
+				})
 			c.Abort()
 			return
+		}
+		if claims.AuthorityID == 0 {
+			zap.S().Error(err.Error())
+			c.JSON(http.StatusUnauthorized,
+				gin.H{
+					"error": "当前用户无权限",
+				})
+			c.Abort()
 		}
 		c.Set("claims", claims)
 		c.Set("authId", claims.AuthorityID)
