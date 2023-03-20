@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"go.uber.org/zap"
 	"parking/global"
 	"parking/model"
 )
@@ -58,8 +59,10 @@ func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int,
 	if result := global.DB.Where("open_id=?", id).First(&user); result.RowsAffected == 0 {
 		return nil, 0, errors.New("用户不存在")
 	}
+	zap.S().Debug(user)
 	var licenses []model.License
 	result := global.DB.Where("user_id=?", user.OpenId).Scopes(Paginate(pn, psize)).Find(&licenses)
+	zap.S().Debug(licenses)
 	var data []model.UserLicenseResp
 	for _, v := range licenses {
 		data = append(data, model.UserLicenseResp{
