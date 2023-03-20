@@ -60,8 +60,10 @@ func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int,
 		return nil, 0, errors.New("用户不存在")
 	}
 	zap.S().Debug(user)
+	localDB := global.DB
+	localDB = localDB.Where("user_id = ?", user.OpenId)
 	var licenses []model.License
-	result := global.DB.Where("user_id=?", user.OpenId).Scopes(Paginate(pn, psize)).Find(&licenses)
+	result := localDB.Scopes(Paginate(pn, psize)).Find(&licenses)
 	zap.S().Debug(licenses)
 	var data []model.UserLicenseResp
 	for _, v := range licenses {
