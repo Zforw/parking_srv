@@ -5,7 +5,7 @@ type User struct {
 	BaseModel
 	Auth   int    `gorm:"comment '0(普通用户), 1(收费人员), 2(管理人员)'"` //用户级别, 暂时将1、2合并
 	OpenId string `gorm:"type:varchar(40)"`                    //用户id
-	Pass   string `gorm:"type:varchar(40)"`                    //管理员密码
+	Pass   string `gorm:"type:varchar(100)"`                   //管理员密码
 }
 
 type UserResp struct {
