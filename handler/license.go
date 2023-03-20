@@ -59,7 +59,7 @@ func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int,
 		return nil, 0, errors.New("用户不存在")
 	}
 	var licenses []model.License
-	result := global.DB.Preload("User").Scopes(Paginate(pn, psize)).Find(&licenses)
+	result := global.DB.Where("user_id=?", user.OpenId).Scopes(Paginate(pn, psize)).Find(&licenses)
 	var data []model.UserLicenseResp
 	for _, v := range licenses {
 		data = append(data, model.UserLicenseResp{
