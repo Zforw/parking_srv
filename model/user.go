@@ -10,7 +10,7 @@ type User struct {
 
 type UserResp struct {
 	OpenId string `json:"id"`   //用户的OpenId
-	Auth   int    `json:"auth"` //用户级别
+	Auth   string `json:"auth"` //用户级别
 }
 
 func (User) TableName() string {
