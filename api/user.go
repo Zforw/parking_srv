@@ -88,6 +88,7 @@ func Login(ctx *gin.Context) {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
+			"token": "",
 		})
 		return
 	}
@@ -106,6 +107,7 @@ func Login(ctx *gin.Context) {
 		zap.S().Error("验证成功, 但生成token失败", err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error": "生成token失败",
+			"token": "",
 		})
 		return
 	}
