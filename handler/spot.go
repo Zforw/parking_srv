@@ -7,19 +7,22 @@ import (
 )
 
 func CreateBlock(blockNo string, lat, lgt float64) error {
-	block := model.Block{}
+	block := model.Block{
+		BlockNo: blockNo,
+		Lat:     lat,
+		Lgt:     lgt,
+	}
 	if result := global.DB.Where("block_no=?", blockNo).First(&block); result.RowsAffected != 0 {
 		return errors.New("停车区已存在")
 	}
-	block.BlockNo = blockNo
-	block.Lat = lat
-	block.Lgt = lgt
 	res := global.DB.Create(&block)
 	return res.Error
 }
 
 func CreateSpot(blockNo, number string) error {
-	block := model.Block{}
+	block := model.Block{
+		BlockNo: blockNo,
+	}
 	if result := global.DB.Where("block_no=?", blockNo).First(&block); result.RowsAffected == 0 {
 		return errors.New("停车区不存在")
 	}
