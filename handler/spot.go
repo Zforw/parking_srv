@@ -10,8 +10,6 @@ func CreateSpot(number string, lat, lgt float64) error {
 	spot := model.Spot{
 		SpotNo: number,
 		Status: "NTU",
-		Lat:    lat,
-		Lgt:    lgt,
 	}
 	if result := global.DB.Where("spot_no=?", number).First(&spot); result.RowsAffected != 0 {
 		return errors.New("停车位已存在")
@@ -40,8 +38,8 @@ func GetSpotList(pn, psize int) ([]model.SpotResp, int, error) {
 		data = append(data, model.SpotResp{
 			SpotNo: v.SpotNo,
 			Status: v.Status,
-			Lat:    v.Lat,
-			Lgt:    v.Lgt,
+			Lat:    16,
+			Lgt:    17,
 		})
 	}
 	count := int(result.RowsAffected)

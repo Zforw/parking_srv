@@ -44,5 +44,5 @@ func main() {
 	}
 
 	//_ = db.AutoMigrate(&model.User{}, &model.License{}, &model.Spot{}, &model.OrderInfo{})
-	_ = db.AutoMigrate(&model.User{})
+	_ = db.AutoMigrate(&model.Block{}, &model.Spot{})
 }
