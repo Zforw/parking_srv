@@ -17,8 +17,15 @@ type Spot struct {
 }
 
 type SpotResp struct {
+	BlockNo string  `json:"blockNo"`
+	SpotNo  string  `json:"spotNo"`
+	Status  string  `json:"status"`
+	Lat     float64 `json:"lat"`
+	Lgt     float64 `json:"lgt"`
+}
+
+type BLockResp struct {
 	SpotNo string  `json:"number"`
-	Status string  `json:"status"`
 	Lat    float64 `json:"lat"`
 	Lgt    float64 `json:"lgt"`
 }

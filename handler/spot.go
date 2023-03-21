@@ -6,10 +6,27 @@ import (
 	"parking/model"
 )
 
-func CreateSpot(number string, lat, lgt float64) error {
+func CreateBlock(blockNo string, lat, lgt float64) error {
+	block := model.Block{}
+	if result := global.DB.Where("block_no=?", blockNo).First(&block); result.RowsAffected != 0 {
+		return errors.New("停车区已存在")
+	}
+	block.Lat = lat
+	block.Lgt = lgt
+	res := global.DB.Create(&block)
+	return res.Error
+}
+
+func CreateSpot(blockNo, number string) error {
+	block := model.Block{}
+	if result := global.DB.Where("block_no=?", blockNo).First(&block); result.RowsAffected == 0 {
+		return errors.New("停车区不存在")
+	}
 	spot := model.Spot{
-		SpotNo: number,
-		Status: "NTU",
+		BlockID: block.ID,
+		Block:   block,
+		SpotNo:  number,
+		Status:  "NTU",
 	}
 	if result := global.DB.Where("spot_no=?", number).First(&spot); result.RowsAffected != 0 {
 		return errors.New("停车位已存在")
@@ -30,16 +47,32 @@ func UpdateSpot(number, status string) error {
 	return res.Error
 }
 
-func GetSpotList(pn, psize int) ([]model.SpotResp, int, error) {
-	var spots []model.Spot
-	result := Paginate(pn, psize)(global.DB).Find(&spots)
+func GetBlockList(pn, psize int) ([]model.SpotResp, int, error) {
+	var blocks []model.Block
+	result := global.DB.Scopes(Paginate(pn, psize)).Find(&blocks)
 	var data []model.SpotResp
 	for _, v := range spots {
 		data = append(data, model.SpotResp{
 			SpotNo: v.SpotNo,
 			Status: v.Status,
-			Lat:    16,
-			Lgt:    17,
+			Lat:    v.Block.Lat,
+			Lgt:    v.Block.Lgt,
+		})
+	}
+	count := int(result.RowsAffected)
+	return data, count, result.Error
+}
+
+func GetSpotList(pn, psize int) ([]model.SpotResp, int, error) {
+	var spots []model.Spot
+	result := global.DB.Preload("Block").Scopes(Paginate(pn, psize)).Find(&spots)
+	var data []model.SpotResp
+	for _, v := range spots {
+		data = append(data, model.SpotResp{
+			SpotNo: v.SpotNo,
+			Status: v.Status,
+			Lat:    v.Block.Lat,
+			Lgt:    v.Block.Lgt,
 		})
 	}
 	count := int(result.RowsAffected)

@@ -10,6 +10,26 @@ import (
 	"strconv"
 )
 
+func CreateBlock(ctx *gin.Context) {
+	s := form.CreateBlockForm{}
+	if err := ctx.ShouldBind(&s); err != nil {
+		utils.HandleValidatorError(ctx, err)
+		return
+	}
+	zap.S().Info("【创建停车区】 ", s)
+	err := handler.CreateBlock(s.BlockNo, s.Lat, s.Lgt)
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"error": "",
+	})
+}
+
 func CreateSpot(ctx *gin.Context) {
 	s := form.CreateSpotForm{}
 	if err := ctx.ShouldBind(&s); err != nil {
@@ -17,7 +37,7 @@ func CreateSpot(ctx *gin.Context) {
 		return
 	}
 	zap.S().Info("【创建停车位】 ", s)
-	err := handler.CreateSpot(s.SpotNo, s.Lat, s.Lgt)
+	err := handler.CreateSpot(s.BlockNo, s.SpotNo)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -48,6 +68,27 @@ func UpdateSpot(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"error": "",
 	})
+}
+
+func GetBlockList(ctx *gin.Context) {
+	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
+	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
+	zap.S().Info("【获取停车区列表】 pn=", pn, ", psize=", pSize)
+	data, count, err := handler.GetBlockList(pn, pSize)
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"count": 0,
+			"data":  nil,
+			"error": err.Error(),
+		})
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{
+			"count": count,
+			"data":  data,
+			"error": "",
+		})
+	}
 }
 
 func GetSpotList(ctx *gin.Context) {
