@@ -72,10 +72,11 @@ func GetSpotList(pn, psize int) ([]model.SpotResp, int, error) {
 	var data []model.SpotResp
 	for _, v := range spots {
 		data = append(data, model.SpotResp{
-			SpotNo: v.SpotNo,
-			Status: v.Status,
-			Lat:    v.Block.Lat,
-			Lgt:    v.Block.Lgt,
+			BlockNo: v.Block.BlockNo,
+			SpotNo:  v.SpotNo,
+			Status:  v.Status,
+			Lat:     v.Block.Lat,
+			Lgt:     v.Block.Lgt,
 		})
 	}
 	count := int(result.RowsAffected)
