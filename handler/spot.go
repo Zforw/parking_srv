@@ -91,10 +91,10 @@ func UpdateBlock(blockNo, newBlockNo string, lat, lgt float64) error {
 		}
 		block.BlockNo = newBlockNo
 	}
-	if lat != 0 {
+	if lat != 400 {
 		block.Lat = lat
 	}
-	if lgt != 0 {
+	if lgt != 400 {
 		block.Lgt = lgt
 	}
 	res := global.DB.Save(&block)

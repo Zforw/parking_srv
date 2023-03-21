@@ -28,7 +28,11 @@ func CreateLicense(number string, openid string) error {
 }
 
 func DeleteLicense(number string, openid string) error {
-	if result := global.DB.Where("number=? and open_id=?", number, openid).Delete(&model.License{}); result.RowsAffected == 0 {
+	u := model.User{}
+	if result := global.DB.Where("open_id=?", openid).First(&u); result.RowsAffected == 0 {
+		return errors.New("用户不存在")
+	}
+	if result := global.DB.Where("number=? and user_id=?", number, u.ID).Delete(&model.License{}); result.RowsAffected == 0 {
 		return errors.New("车牌不存在")
 	}
 	return nil

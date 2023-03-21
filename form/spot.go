@@ -19,8 +19,9 @@ type UpdateSpotForm struct {
 }
 
 type UpdateBlockForm struct {
-	BlockNo    string  `json:"blockNo" binding:"required"`
-	NewBlockNo string  `json:"newBlockNo" binding:"required"`
-	Lat        float64 `json:"lat" binding:"required"`
-	Lgt        float64 `json:"lgt" binding:"required"`
+	BlockNo    string `json:"blockNo" binding:"required"`
+	NewBlockNo string `json:"newBlockNo" binding:"required"`
+
+	Lat float64 `json:"lat" binding:"required"`
+	Lgt float64 `json:"lgt" binding:"required"`
 }
