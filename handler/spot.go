@@ -11,6 +11,7 @@ func CreateBlock(blockNo string, lat, lgt float64) error {
 	if result := global.DB.Where("block_no=?", blockNo).First(&block); result.RowsAffected != 0 {
 		return errors.New("停车区已存在")
 	}
+	block.BlockNo = blockNo
 	block.Lat = lat
 	block.Lgt = lgt
 	res := global.DB.Create(&block)
