@@ -89,6 +89,7 @@ func UpdateBlock(blockNo, newBlockNo string, lat, lgt float64) error {
 		if result := global.DB.Where("block_no=?", newBlockNo).First(&nb); result.RowsAffected != 0 {
 			return errors.New("新的编号已被使用")
 		}
+		block.BlockNo = newBlockNo
 	}
 	if lat != 0 {
 		block.Lat = lat
