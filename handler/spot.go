@@ -52,7 +52,7 @@ func UpdateSpot(spotNo, blockNo, newSpotNo, newBlockNo string) error {
 	if result := global.DB.Where("spot_no=?", spotNo).First(&spot); result.RowsAffected == 0 {
 		return errors.New("停车位不存在")
 	}
-	if newSpotNo != "" {
+	if newSpotNo != spotNo {
 		ns := model.Spot{
 			SpotNo: newSpotNo,
 		}
@@ -61,7 +61,7 @@ func UpdateSpot(spotNo, blockNo, newSpotNo, newBlockNo string) error {
 		}
 		spot.SpotNo = newSpotNo
 	}
-	if newBlockNo != "" {
+	if newBlockNo != blockNo {
 		nb := model.Block{
 			BlockNo: newBlockNo,
 		}
@@ -82,7 +82,7 @@ func UpdateBlock(blockNo, newBlockNo string, lat, lgt float64) error {
 	if result := global.DB.Where("block_no=?", blockNo).First(&block); result.RowsAffected == 0 {
 		return errors.New("停车位不存在")
 	}
-	if newBlockNo != "" {
+	if newBlockNo != blockNo {
 		nb := model.Block{
 			BlockNo: newBlockNo,
 		}
