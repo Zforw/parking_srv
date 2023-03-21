@@ -12,6 +12,15 @@ type CreateSpotForm struct {
 }
 
 type UpdateSpotForm struct {
-	SpotNo string `json:"number" binding:"required"`
-	Status string `json:"status" binding:"required,oneof=TU NTU"`
+	SpotNo     string `json:"spotNo" binding:"required"`
+	NewSpotNo  string `json:"newSpotNo" binding:"required"`
+	BlockNo    string `json:"blockNo" binding:"required"`
+	NewBlockNo string `json:"newBlockNo" binding:"required"`
+}
+
+type UpdateBlockForm struct {
+	BlockNo    string  `json:"blockNo" binding:"required"`
+	NewBlockNo string  `json:"newBlockNo" binding:"required"`
+	Lat        float64 `json:"lat" binding:"required"`
+	Lgt        float64 `json:"lgt" binding:"required"`
 }

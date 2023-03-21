@@ -30,6 +30,26 @@ func CreateLicense(ctx *gin.Context) {
 	})
 }
 
+func DeleteLicense(ctx *gin.Context) {
+	l := form.CreateLicenseForm{}
+	if err := ctx.ShouldBind(&l); err != nil {
+		utils.HandleValidatorError(ctx, err)
+		return
+	}
+	zap.S().Info("【删除车牌】 ", l)
+	err := handler.DeleteLicense(l.Number, l.OpenId)
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"error": "",
+	})
+}
+
 func UpdateLicense(ctx *gin.Context) {
 	l := form.UpdateLicenseForm{}
 	if err := ctx.ShouldBind(&l); err != nil {

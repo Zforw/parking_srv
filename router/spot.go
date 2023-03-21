@@ -13,7 +13,8 @@ func InitSpotRouter(group *gin.RouterGroup) {
 	{
 		SpotRouter.POST("add", middlewares.JWTAuth(), api.CreateSpot)
 		SpotRouter.POST("addb", middlewares.JWTAuth(), api.CreateBlock)
-		SpotRouter.POST("update", middlewares.JWTAuth(), api.UpdateSpot)
+		SpotRouter.POST("update_spot", middlewares.JWTAuth(), api.UpdateSpot)
+		SpotRouter.POST("update_block", middlewares.JWTAuth(), api.UpdateBlock)
 		SpotRouter.GET("list", middlewares.JWTAuth(), api.GetSpotList)
 		SpotRouter.GET("blist", middlewares.JWTAuth(), api.GetBlockList)
 	}

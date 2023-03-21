@@ -39,15 +39,64 @@ func CreateSpot(blockNo, number string) error {
 	return res.Error
 }
 
-func UpdateSpot(number, status string) error {
-	spot := model.Spot{
-		SpotNo: number,
+func UpdateSpot(spotNo, blockNo, newSpotNo, newBlockNo string) error {
+	block := model.Block{
+		BlockNo: blockNo,
 	}
-	if result := global.DB.Where("spot_no=?", number).First(&spot); result.RowsAffected == 0 {
+	if result := global.DB.Where("block_no=?", blockNo).First(&block); result.RowsAffected == 0 {
+		return errors.New("停车区不存在")
+	}
+	spot := model.Spot{
+		SpotNo: spotNo,
+	}
+	if result := global.DB.Where("spot_no=?", spotNo).First(&spot); result.RowsAffected == 0 {
 		return errors.New("停车位不存在")
 	}
-	spot.Status = status
+	if newSpotNo != "" {
+		ns := model.Spot{
+			SpotNo: newSpotNo,
+		}
+		if result := global.DB.Where("spot_no=?", spotNo).First(&ns); result.RowsAffected != 0 {
+			return errors.New("新的停车位编号已被使用")
+		}
+		spot.SpotNo = newSpotNo
+	}
+	if newBlockNo != "" {
+		nb := model.Block{
+			BlockNo: newBlockNo,
+		}
+		if result := global.DB.Where("block_no=?", blockNo).First(&nb); result.RowsAffected == 0 {
+			return errors.New("新的停车区编号不存在")
+		}
+		spot.BlockID = nb.ID
+		spot.Block = nb
+	}
 	res := global.DB.Save(&spot)
+	return res.Error
+}
+
+func UpdateBlock(blockNo, newBlockNo string, lat, lgt float64) error {
+	block := model.Block{
+		BlockNo: blockNo,
+	}
+	if result := global.DB.Where("block_no=?", blockNo).First(&block); result.RowsAffected == 0 {
+		return errors.New("停车位不存在")
+	}
+	if newBlockNo != "" {
+		nb := model.Block{
+			BlockNo: newBlockNo,
+		}
+		if result := global.DB.Where("block_no=?", newBlockNo).First(&nb); result.RowsAffected != 0 {
+			return errors.New("新的编号已被使用")
+		}
+	}
+	if lat != 0 {
+		block.Lat = lat
+	}
+	if lgt != 0 {
+		block.Lgt = lgt
+	}
+	res := global.DB.Save(&block)
 	return res.Error
 }
 

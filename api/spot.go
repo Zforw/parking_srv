@@ -51,13 +51,33 @@ func CreateSpot(ctx *gin.Context) {
 }
 
 func UpdateSpot(ctx *gin.Context) {
-	l := form.UpdateSpotForm{}
-	if err := ctx.ShouldBind(&l); err != nil {
+	s := form.UpdateSpotForm{}
+	if err := ctx.ShouldBind(&s); err != nil {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
-	zap.S().Info("【更新停车位状态】 ", l)
-	err := handler.UpdateSpot(l.SpotNo, l.Status)
+	zap.S().Info("【更新停车位信息】 ", s)
+	err := handler.UpdateSpot(s.SpotNo, s.BlockNo, s.NewSpotNo, s.NewBlockNo)
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"error": "",
+	})
+}
+
+func UpdateBlock(ctx *gin.Context) {
+	b := form.UpdateBlockForm{}
+	if err := ctx.ShouldBind(&b); err != nil {
+		utils.HandleValidatorError(ctx, err)
+		return
+	}
+	zap.S().Info("【更新停车区信息】 ", b)
+	err := handler.UpdateBlock(b.BlockNo, b.NewBlockNo, b.Lat, b.Lgt)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
