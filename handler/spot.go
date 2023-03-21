@@ -47,16 +47,15 @@ func UpdateSpot(number, status string) error {
 	return res.Error
 }
 
-func GetBlockList(pn, psize int) ([]model.SpotResp, int, error) {
+func GetBlockList(pn, psize int) ([]model.BLockResp, int, error) {
 	var blocks []model.Block
 	result := global.DB.Scopes(Paginate(pn, psize)).Find(&blocks)
-	var data []model.SpotResp
-	for _, v := range spots {
-		data = append(data, model.SpotResp{
-			SpotNo: v.SpotNo,
-			Status: v.Status,
-			Lat:    v.Block.Lat,
-			Lgt:    v.Block.Lgt,
+	var data []model.BLockResp
+	for _, v := range blocks {
+		data = append(data, model.BLockResp{
+			BlockNo: v.BlockNo,
+			Lat:     v.Lat,
+			Lgt:     v.Lgt,
 		})
 	}
 	count := int(result.RowsAffected)

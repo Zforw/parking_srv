@@ -25,9 +25,9 @@ type SpotResp struct {
 }
 
 type BLockResp struct {
-	SpotNo string  `json:"number"`
-	Lat    float64 `json:"lat"`
-	Lgt    float64 `json:"lgt"`
+	BlockNo string  `json:"blockNo"`
+	Lat     float64 `json:"lat"`
+	Lgt     float64 `json:"lgt"`
 }
 
 func (Block) TableName() string {
