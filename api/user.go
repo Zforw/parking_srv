@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 	"net/http"
 	"parking/form"
+	"parking/global"
 	"parking/handler"
 	"parking/middlewares"
 	"parking/utils"
@@ -96,7 +97,7 @@ func Login(ctx *gin.Context) {
 		AuthorityID: 1,
 		StandardClaims: jwt.StandardClaims{
 			NotBefore: time.Now().Unix(),
-			ExpiresAt: time.Now().Unix() + 60*60*24, //24小时过期
+			ExpiresAt: time.Now().Unix() + 60*60*global.ServerConfig.JWTInfo.ExpireHour, //24小时过期
 			Issuer:    "ZHP",
 		},
 	}

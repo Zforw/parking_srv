@@ -10,6 +10,7 @@ type MySqlConfig struct {
 
 type JWTConfig struct {
 	SigningKey string `json:"key"`
+	ExpireHour int64  `json:"hour"`
 }
 
 type ServerConfig struct {
