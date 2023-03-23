@@ -36,5 +36,5 @@ type OrderInfo struct {
 }
 
 func (OrderInfo) TableName() string {
-	return "order"
+	return "order_info"
 }
