@@ -22,7 +22,7 @@ type OrderInfo struct {
 	OrderSn string `gorm:"type:varchar(30);index"` //订单号，自己生成的订单号
 	PayType string `gorm:"type:varchar(20) comment 'alipay(支付宝)， wechat(微信)，cash(现金)'"`
 
-	Status     string     `gorm:"type:varchar(20)  comment 'PAYING(待支付), TRADE_SUCCESS(成功)，WAIT_BUYER_PAY(交易创建), TRADE_FINISHED(交易结束)'"`
+	Status     string     `gorm:"type:varchar(20)  comment 'PAYING(待支付), TRADE_SUCCESS(成功)，WAIT_BUYER_PAY(交易创建)'"`
 	TradeNo    string     `gorm:"type:varchar(100) comment '交易号'"` //支付宝的订单号 查账
 	OrderMount float32    //金额
 	StartTime  *time.Time `gorm:"type:datetime"` //开始时间
@@ -37,4 +37,16 @@ type OrderInfo struct {
 
 func (OrderInfo) TableName() string {
 	return "order_info"
+}
+
+type Charge struct {
+	BaseModel
+	A int32
+	B int32
+	C int32
+	D int32
+}
+
+func (Charge) TableName() string {
+	return "charge"
 }
