@@ -30,7 +30,7 @@ func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 func CreateUser(auth int, openid, pass string) error {
 	user := model.User{OpenId: openid, Auth: auth, Pass: pass}
 	if result := global.DB.Where("open_id=?", openid).First(&user); result.RowsAffected != 0 {
-		return nil
+		return errors.New("id重复")
 	}
 	res := global.DB.Create(&user)
 	return res.Error
