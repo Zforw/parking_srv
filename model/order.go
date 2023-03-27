@@ -28,9 +28,6 @@ type OrderInfo struct {
 	StartTime  *time.Time `gorm:"type:datetime"` //开始时间
 	PayTime    *time.Time `gorm:"type:datetime"` //结束时间
 
-	SpotID int32
-	Spot   Spot `gorm:"foreignKey:SpotID"`
-
 	LicenseID int32
 	License   License `gorm:"foreignKey:LicenseID"`
 }
