@@ -17,5 +17,6 @@ func InitSpotRouter(group *gin.RouterGroup) {
 		SpotRouter.POST("update_block", middlewares.JWTAuth(), api.UpdateBlock)
 		SpotRouter.GET("list", middlewares.JWTAuth(), api.GetSpotList)
 		SpotRouter.GET("blist", middlewares.JWTAuth(), api.GetBlockList)
+		SpotRouter.GET("find_spot", middlewares.JWTAuth(), api.FindSpot)
 	}
 }

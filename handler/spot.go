@@ -30,13 +30,22 @@ func CreateSpot(blockNo, number string) error {
 		BlockID: block.ID,
 		Block:   block,
 		SpotNo:  number,
-		Status:  "NTU",
 	}
 	if result := global.DB.Where("spot_no=?", number).First(&spot); result.RowsAffected != 0 {
 		return errors.New("停车位已存在")
 	}
 	res := global.DB.Create(&spot)
 	return res.Error
+}
+
+func FindSpot(spotNo string) (model.SpotResp, error) {
+	spot := model.Spot{
+		SpotNo: spotNo,
+	}
+	if result := global.DB.Where("spot_no=?", spotNo).First(&spot); result.RowsAffected == 0 {
+		return model.SpotResp{}, errors.New("停车位不存在")
+	}
+	return model.SpotResp{SpotNo: spot.SpotNo, BlockNo: spot.Block.BlockNo, Lat: spot.Block.Lat, Lgt: spot.Block.Lgt}, nil
 }
 
 func UpdateSpot(spotNo, blockNo, newSpotNo, newBlockNo string) error {
@@ -124,7 +133,6 @@ func GetSpotList(pn, psize int) ([]model.SpotResp, int, error) {
 		data = append(data, model.SpotResp{
 			BlockNo: v.Block.BlockNo,
 			SpotNo:  v.SpotNo,
-			Status:  v.Status,
 			Lat:     v.Block.Lat,
 			Lgt:     v.Block.Lgt,
 		})

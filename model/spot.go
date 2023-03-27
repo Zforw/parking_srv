@@ -13,13 +13,11 @@ type Spot struct {
 	BlockID int32
 	Block   Block  `gorm:"foreignKey:BlockID"`
 	SpotNo  string `gorm:"type:varchar(20);not null"` //停车位编号：A01...
-	Status  string `gorm:"type:varchar(20)  comment 'NTU(未占用), TU(占用)'"`
 }
 
 type SpotResp struct {
 	BlockNo string  `json:"blockNo"`
 	SpotNo  string  `json:"spotNo"`
-	Status  string  `json:"status"`
 	Lat     float64 `json:"lat"`
 	Lgt     float64 `json:"lgt"`
 }

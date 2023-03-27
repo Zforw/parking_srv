@@ -90,6 +90,24 @@ func UpdateBlock(ctx *gin.Context) {
 	})
 }
 
+func FindSpot(ctx *gin.Context) {
+	no := ctx.Query("spot_no")
+	zap.S().Info("【查找停车位】 spot_no=", no)
+	data, err := handler.FindSpot(no)
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"data":  nil,
+			"error": err.Error(),
+		})
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{
+			"data":  data,
+			"error": "",
+		})
+	}
+}
+
 func GetBlockList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
