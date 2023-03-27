@@ -45,7 +45,9 @@ func FindSpot(spotNo string) (model.SpotResp, error) {
 	if result := global.DB.Where("spot_no=?", spotNo).First(&spot); result.RowsAffected == 0 {
 		return model.SpotResp{}, errors.New("停车位不存在")
 	}
-	return model.SpotResp{SpotNo: spot.SpotNo, BlockNo: spot.Block.BlockNo, Lat: spot.Block.Lat, Lgt: spot.Block.Lgt}, nil
+	block := model.Block{}
+	_ = global.DB.First(block, spot.ID)
+	return model.SpotResp{SpotNo: spot.SpotNo, BlockNo: block.BlockNo, Lat: spot.Block.Lat, Lgt: spot.Block.Lgt}, nil
 }
 
 func UpdateSpot(spotNo, blockNo, newSpotNo, newBlockNo string) error {
