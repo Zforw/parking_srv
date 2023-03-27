@@ -152,14 +152,14 @@ func GetSpotList(ctx *gin.Context) {
 			"code":  2,
 			"count": 0,
 			"data":  nil,
-			"error": "获取失败，" + err.Error(),
+			"msg":   "获取失败，" + err.Error(),
 		})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
 			"code":  1,
 			"count": count,
 			"data":  data,
-			"error": "获取成功",
+			"msg":   "获取成功",
 		})
 	}
 }
