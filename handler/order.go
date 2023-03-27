@@ -41,6 +41,29 @@ func CreateOrder(number string, start time.Time) error {
 	return res.Error
 }
 
+func GetOrderList(id string) ([]model.OrderResp, int, error) {
+	var oo []model.OrderInfo
+	u := model.User{}
+	if result := global.DB.Where("open_id=?", id).First(&u); result.RowsAffected == 0 {
+		return nil, 0, errors.New("用户不存在")
+	}
+	var data []model.OrderResp
+	result := Paginate(0, 90)(global.DB).Find(&oo)
+	for _, v := range oo {
+		data = append(data, model.OrderResp{
+			OrderSn:       v.OrderSn,
+			PayType:       v.PayType,
+			Status:        v.Status,
+			OrderMount:    v.OrderMount,
+			StartTime:     v.StartTime,
+			PayTime:       v.PayTime,
+			LicenseNumber: v.License.Number,
+		})
+	}
+	count := int(result.RowsAffected)
+	return data, count, result.Error
+}
+
 func UpdateOrder(number, pay_type string) error {
 	l := model.License{}
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {

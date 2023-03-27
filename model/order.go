@@ -32,6 +32,17 @@ type OrderInfo struct {
 	License   License `gorm:"foreignKey:LicenseID"`
 }
 
+type OrderResp struct {
+	OrderSn string `gorm:"type:varchar(30);index"` //订单号，自己生成的订单号
+	PayType string `gorm:"type:varchar(20) comment 'alipay(支付宝)， wechat(微信)，cash(现金)'"`
+
+	Status        string     `gorm:"type:varchar(20)  comment 'PAYING(待支付), TRADE_SUCCESS(成功)，WAIT_BUYER_PAY(交易创建)'"`
+	OrderMount    float32    //金额
+	StartTime     *time.Time `gorm:"type:datetime"` //开始时间
+	PayTime       *time.Time `gorm:"type:datetime"` //结束时间
+	LicenseNumber string     `gorm:"type:varchar(20)"`
+}
+
 func (OrderInfo) TableName() string {
 	return "order_info"
 }
