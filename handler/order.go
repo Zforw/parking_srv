@@ -67,7 +67,7 @@ func GetUserOrderList(id string) ([]model.OrderResp, int, error) {
 		return nil, 0, errors.New("用户不存在")
 	}
 	var data []model.OrderResp
-	result := Paginate(0, 90)(global.DB).Find(&oo)
+	result := global.DB.Preload("License").Scopes(Paginate(0, 90)).Find(&oo)
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
