@@ -41,7 +41,26 @@ func CreateOrder(number string, start time.Time) error {
 	return res.Error
 }
 
-func GetOrderList(id string) ([]model.OrderResp, int, error) {
+func GetOrderList(pn, psize int) ([]model.OrderResp, int, error) {
+	var oo []model.OrderInfo
+	var data []model.OrderResp
+	result := Paginate(pn, psize)(global.DB).Find(&oo)
+	for _, v := range oo {
+		data = append(data, model.OrderResp{
+			OrderSn:       v.OrderSn,
+			PayType:       v.PayType,
+			Status:        v.Status,
+			OrderMount:    v.OrderMount,
+			StartTime:     v.StartTime,
+			PayTime:       v.PayTime,
+			LicenseNumber: v.License.Number,
+		})
+	}
+	count := int(result.RowsAffected)
+	return data, count, result.Error
+}
+
+func GetUserOrderList(id string) ([]model.OrderResp, int, error) {
 	var oo []model.OrderInfo
 	u := model.User{}
 	if result := global.DB.Where("open_id=?", id).First(&u); result.RowsAffected == 0 {

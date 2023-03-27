@@ -53,9 +53,10 @@ func UpdateOrder(ctx *gin.Context) {
 }
 
 func GetOrderList(ctx *gin.Context) {
-	id := ctx.Query("id")
-	zap.S().Info("【获取订单列表】 id=", id)
-	data, count, err := handler.GetOrderList(id)
+	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
+	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
+	zap.S().Info("【获取订单列表】pn=", pn, ", psize=", pSize)
+	data, count, err := handler.GetOrderList(pn, pSize)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -73,10 +74,9 @@ func GetOrderList(ctx *gin.Context) {
 }
 
 func GetUserOrderList(ctx *gin.Context) {
-	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
-	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
-	zap.S().Info("【获取用户订单列表】 pn=", pn, ", psize=", pSize)
-	data, count, err := handler.GetBlockList(pn, pSize)
+	id := ctx.Query("id")
+	zap.S().Info("【获取用户订单列表】 open_id=", id)
+	data, count, err := handler.GetUserOrderList(id)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
