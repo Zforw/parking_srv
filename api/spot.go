@@ -66,7 +66,7 @@ func UpdateSpot(ctx *gin.Context) {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"code": 2,
-			"msg":  "更新失败" + err.Error(),
+			"msg":  "更新失败，" + err.Error(),
 		})
 		return
 	}
@@ -88,7 +88,7 @@ func UpdateBlock(ctx *gin.Context) {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"code": 2,
-			"msg":  "更新失败" + err.Error(),
+			"msg":  "更新失败，" + err.Error(),
 		})
 		return
 	}

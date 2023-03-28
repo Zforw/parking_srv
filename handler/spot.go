@@ -67,7 +67,7 @@ func UpdateSpot(spotNo, blockNo, newSpotNo, newBlockNo string) error {
 		ns := model.Spot{
 			SpotNo: newSpotNo,
 		}
-		if result := global.DB.Where("spot_no=?", spotNo).First(&ns); result.RowsAffected != 0 {
+		if result := global.DB.Where("spot_no=?", newSpotNo).First(&ns); result.RowsAffected != 0 {
 			return errors.New("新的停车位编号已被使用")
 		}
 		spot.SpotNo = newSpotNo
@@ -76,7 +76,7 @@ func UpdateSpot(spotNo, blockNo, newSpotNo, newBlockNo string) error {
 		nb := model.Block{
 			BlockNo: newBlockNo,
 		}
-		if result := global.DB.Where("block_no=?", blockNo).First(&nb); result.RowsAffected == 0 {
+		if result := global.DB.Where("block_no=?", newBlockNo).First(&nb); result.RowsAffected == 0 {
 			return errors.New("新的停车区编号不存在")
 		}
 		spot.BlockID = nb.ID
