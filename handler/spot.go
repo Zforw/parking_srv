@@ -46,7 +46,7 @@ func FindSpot(spotNo string) (model.SpotResp, error) {
 		return model.SpotResp{}, errors.New("停车位不存在")
 	}
 	block := model.Block{}
-	_ = global.DB.First(block, spot.ID)
+	_ = global.DB.First(block, spot.BlockID)
 	return model.SpotResp{SpotNo: spot.SpotNo, BlockNo: block.BlockNo, Lat: spot.Block.Lat, Lgt: spot.Block.Lgt}, nil
 }
 
