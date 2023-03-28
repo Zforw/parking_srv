@@ -77,7 +77,7 @@ func GetOrderList(ctx *gin.Context) {
 func GetUserOrderList(ctx *gin.Context) {
 	id := ctx.Query("id")
 	zap.S().Info("【获取用户订单列表】 open_id=", id)
-	data, count, err := handler.GetUserOrderList(id)
+	data, count, err := handler.GetLicenseOrderList(id)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
