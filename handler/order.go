@@ -44,7 +44,7 @@ func CreateOrder(number string, start time.Time) error {
 func GetOrderList(pn, psize int) ([]model.OrderResp, int, error) {
 	var oo []model.OrderInfo
 	var data []model.OrderResp
-	result := Paginate(pn, psize)(global.DB).Find(&oo)
+	result := global.DB.Preload("License").Scopes(Paginate(0, 90)).Find(&oo)
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
@@ -67,7 +67,9 @@ func GetUserOrderList(id string) ([]model.OrderResp, int, error) {
 		return nil, 0, errors.New("用户不存在")
 	}
 	var data []model.OrderResp
-	result := global.DB.Preload("License").Scopes(Paginate(0, 90)).Find(&oo)
+	localDB := global.DB
+	localDB = localDB.Where("user_id=?", u.ID)
+	result := localDB.Preload("License").Scopes(Paginate(0, 90)).Find(&oo)
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
