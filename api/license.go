@@ -50,6 +50,7 @@ func DeleteLicense(ctx *gin.Context) {
 	})
 }
 
+/*
 func UpdateLicense(ctx *gin.Context) {
 	l := form.UpdateLicenseForm{}
 	if err := ctx.ShouldBind(&l); err != nil {
@@ -69,6 +70,7 @@ func UpdateLicense(ctx *gin.Context) {
 		"error": "",
 	})
 }
+*/
 
 func GetLicenseList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
