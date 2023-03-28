@@ -47,7 +47,7 @@ func FindSpot(spotNo string) (model.SpotResp, error) {
 	}
 	block := model.Block{}
 	result := global.DB.First(&block, spot.BlockID)
-	return model.SpotResp{SpotNo: spot.SpotNo, BlockNo: block.BlockNo, Lat: spot.Block.Lat, Lgt: spot.Block.Lgt}, result.Error
+	return model.SpotResp{SpotNo: spot.SpotNo, BlockNo: block.BlockNo, Lat: block.Lat, Lgt: block.Lgt}, result.Error
 }
 
 func UpdateSpot(spotNo, blockNo, newSpotNo, newBlockNo string) error {
