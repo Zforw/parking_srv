@@ -15,6 +15,7 @@ func InitOrderRouter(group *gin.RouterGroup) {
 		OrderRouter.POST("update", middlewares.JWTAuth(), api.UpdateOrder)
 		OrderRouter.GET("list", middlewares.JWTAuth(), api.GetOrderList)
 		OrderRouter.GET("ulist", middlewares.JWTAuth(), api.GetUserOrderList)
+		OrderRouter.GET("llist", middlewares.JWTAuth(), api.GetLicenseOrderList)
 		OrderRouter.GET("money", middlewares.JWTAuth(), api.GetMoney)
 	}
 }

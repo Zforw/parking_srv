@@ -94,6 +94,26 @@ func GetUserOrderList(ctx *gin.Context) {
 	}
 }
 
+func GetLicenseOrderList(ctx *gin.Context) {
+	number := ctx.Query("number")
+	zap.S().Info("【获取车牌订单列表】 number=", number)
+	data, count, err := handler.GetUserOrderList(number)
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"count": 0,
+			"data":  nil,
+			"error": err.Error(),
+		})
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{
+			"count": count,
+			"data":  data,
+			"error": "",
+		})
+	}
+}
+
 func GetMoney(ctx *gin.Context) {
 	end := time.Now()
 	number := ctx.Query("number")

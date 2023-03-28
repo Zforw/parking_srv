@@ -93,6 +93,31 @@ func GetUserOrderList(id string) ([]model.OrderResp, int, error) {
 	return data, count, result.Error
 }
 
+func GetLicenseOrderList(number string) ([]model.OrderResp, int, error) {
+	var oo []model.OrderInfo
+	l := model.License{}
+	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
+		return nil, 0, errors.New("车牌不存在")
+	}
+	var data []model.OrderResp
+	localDB := global.DB
+	localDB = localDB.Where("license_id=?", l.ID)
+	result := localDB.Preload("License").Scopes(Paginate(0, 90)).Find(&oo)
+	for _, v := range oo {
+		data = append(data, model.OrderResp{
+			OrderSn:       v.OrderSn,
+			PayType:       v.PayType,
+			Status:        v.Status,
+			OrderMount:    v.OrderMount,
+			StartTime:     v.StartTime,
+			PayTime:       v.PayTime,
+			LicenseNumber: v.License.Number,
+		})
+	}
+	count := int(result.RowsAffected)
+	return data, count, result.Error
+}
+
 func UpdateOrder(number, pay_type string) error {
 	l := model.License{}
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
