@@ -28,6 +28,9 @@ func CreateOrder(number string, start time.Time) error {
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
 		return errors.New("车牌不存在")
 	}
+	if result := global.DB.Where("license_id=?", l.ID).First(&model.License{}); result.RowsAffected != 0 {
+		return errors.New("订单已存在")
+	}
 	o := model.OrderInfo{
 		UserID:    l.UserID,
 		User:      l.User,
@@ -37,7 +40,9 @@ func CreateOrder(number string, start time.Time) error {
 		LicenseID: l.ID,
 		License:   l,
 	}
-	res := global.DB.Create(&o)
+	l.Status = "IN"
+	res := global.DB.Save(&l)
+	res = global.DB.Create(&o)
 	return res.Error
 }
 

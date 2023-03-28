@@ -38,6 +38,7 @@ func DeleteLicense(number string, openid string) error {
 	return nil
 }
 
+/*
 func UpdateLicense(number string, status string) error {
 	license := model.License{
 		Number: number,
@@ -49,6 +50,7 @@ func UpdateLicense(number string, status string) error {
 	res := global.DB.Save(&license)
 	return res.Error
 }
+*/
 
 func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
 	var licenses []model.License
