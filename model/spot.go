@@ -12,7 +12,7 @@ type Spot struct {
 	BaseModel
 	BlockID int32
 	Block   Block  `gorm:"foreignKey:BlockID"`
-	SpotNo  string `gorm:"type:varchar(20);not null"` //停车位编号：A01...
+	SpotNo  string `gorm:"type:varchar(20)"` //停车位编号：A01...
 }
 
 type SpotResp struct {

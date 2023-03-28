@@ -21,13 +21,13 @@ func CreateBlock(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"code": 2,
+			"code": 1,
 			"msg":  "创建失败，" + err.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"code": 1,
+		"code": 0,
 		"msg":  "创建成功",
 	})
 }
@@ -43,13 +43,13 @@ func CreateSpot(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"code": 2,
+			"code": 1,
 			"msg":  "创建失败，" + err.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"code": 1,
+		"code": 0,
 		"msg":  "创建停车位成功",
 	})
 }
@@ -65,13 +65,13 @@ func UpdateSpot(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"code": 2,
+			"code": 1,
 			"msg":  "更新失败，" + err.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"code": 1,
+		"code": 0,
 		"msg":  "更新成功",
 	})
 }
@@ -87,13 +87,13 @@ func UpdateBlock(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"code": 2,
+			"code": 1,
 			"msg":  "更新失败，" + err.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"code": 1,
+		"code": 0,
 		"msg":  "更新成功",
 	})
 }
@@ -105,13 +105,13 @@ func FindSpot(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"code": 2,
+			"code": 1,
 			"data": nil,
 			"msg":  "查找失败，" + err.Error(),
 		})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
-			"code": 1,
+			"code": 0,
 			"data": data,
 			"msg":  "查找成功",
 		})
@@ -126,14 +126,14 @@ func GetBlockList(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"code":  2,
+			"code":  1,
 			"count": 0,
 			"data":  nil,
 			"msg":   "获取失败，" + err.Error(),
 		})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
-			"code":  1,
+			"code":  0,
 			"count": count,
 			"data":  data,
 			"msg":   "获取成功",
@@ -149,14 +149,14 @@ func GetSpotList(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"code":  2,
+			"code":  1,
 			"count": 0,
 			"data":  nil,
 			"msg":   "获取失败，" + err.Error(),
 		})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
-			"code":  1,
+			"code":  0,
 			"count": count,
 			"data":  data,
 			"msg":   "获取成功",
