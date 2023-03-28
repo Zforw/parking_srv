@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"go.uber.org/zap"
 	"parking/global"
 	"parking/model"
 )
@@ -46,10 +45,8 @@ func FindSpot(spotNo string) (model.SpotResp, error) {
 	if result := global.DB.Where("spot_no=?", spotNo).First(&spot); result.RowsAffected == 0 {
 		return model.SpotResp{}, errors.New("停车位不存在")
 	}
-	zap.S().Info(spot)
 	block := model.Block{}
-	result := global.DB.First(block, spot.BlockID)
-	zap.S().Info(result.Error)
+	result := global.DB.First(&block, spot.BlockID)
 	return model.SpotResp{SpotNo: spot.SpotNo, BlockNo: block.BlockNo, Lat: spot.Block.Lat, Lgt: spot.Block.Lgt}, result.Error
 }
 
