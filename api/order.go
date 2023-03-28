@@ -27,6 +27,8 @@ func CreateOrder(ctx *gin.Context) {
 		})
 		return
 	}
+	handler.UpdateLicense(o.Number, "IN")
+	zap.S().Info("修改车牌 ", o.Number, " 状态为IN")
 	ctx.JSON(http.StatusOK, gin.H{
 		"error": "",
 	})
