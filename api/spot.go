@@ -104,7 +104,7 @@ func FindSpot(ctx *gin.Context) {
 	data, err := handler.FindSpot(no)
 	if err != nil {
 		zap.S().Error(err.Error())
-		ctx.JSON(http.StatusInternalServerError, gin.H{
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"code": 2,
 			"data": nil,
 			"msg":  "查找失败，" + err.Error(),
