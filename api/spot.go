@@ -120,7 +120,8 @@ func FindSpot(ctx *gin.Context) {
 
 func GetBlockList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
-	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
+	pn -= 1
+	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "10"))
 	zap.S().Info("【获取停车区列表】 pn=", pn, ", psize=", pSize)
 	data, count, err := handler.GetBlockList(pn, pSize)
 	if err != nil {
@@ -146,7 +147,7 @@ func GetSpotList(ctx *gin.Context) {
 	pn -= 1
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "10"))
 	spotNo := ctx.DefaultQuery("spotNo", "0")
-	zap.S().Info("【获取停车位列表】 pn=", pn, ", psize=", pSize, "spotNo=", spotNo)
+	zap.S().Info("【获取停车位列表】 pn=", pn, ", psize=", pSize, ", spotNo=", spotNo)
 	data, count, err := handler.GetSpotList(pn, pSize, spotNo)
 	if err != nil {
 		zap.S().Error(err.Error())
