@@ -143,9 +143,11 @@ func GetBlockList(ctx *gin.Context) {
 
 func GetSpotList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
-	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
+	pn -= 1
+	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "10"))
+	spotNo := ctx.DefaultQuery("spoNo", "0")
 	zap.S().Info("【获取停车位列表】 pn=", pn, ", psize=", pSize)
-	data, count, err := handler.GetSpotList(pn, pSize)
+	data, count, err := handler.GetSpotList(pn, pSize, spotNo)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
