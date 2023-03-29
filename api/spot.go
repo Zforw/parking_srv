@@ -146,7 +146,7 @@ func GetSpotList(ctx *gin.Context) {
 	pn -= 1
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "10"))
 	spotNo := ctx.DefaultQuery("spoNo", "0")
-	zap.S().Info("【获取停车位列表】 pn=", pn, ", psize=", pSize)
+	zap.S().Info("【获取停车位列表】 pn=", pn, ", psize=", pSize, "spotNo=", spotNo)
 	data, count, err := handler.GetSpotList(pn, pSize, spotNo)
 	if err != nil {
 		zap.S().Error(err.Error())
