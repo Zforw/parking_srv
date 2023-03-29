@@ -113,6 +113,8 @@ func UpdateBlock(blockNo, newBlockNo string, lat, lgt float64) error {
 }
 
 func GetBlockList(pn, psize int) ([]model.BLockResp, int, error) {
+	var blocksCount int64
+	global.DB.Model(&model.Spot{}).Count(&blocksCount)
 	var blocks []model.Block
 	result := global.DB.Scopes(Paginate(pn, psize)).Find(&blocks)
 	var data []model.BLockResp
@@ -123,12 +125,14 @@ func GetBlockList(pn, psize int) ([]model.BLockResp, int, error) {
 			Lgt:     v.Lgt,
 		})
 	}
-	count := int(result.RowsAffected)
-	return data, count, result.Error
+	count := blocksCount
+	return data, int(count), result.Error
 }
 
 func GetSpotList(pn, psize int, spotNo string) ([]model.SpotResp, int, error) {
 	var spots []model.Spot
+	var spotsCount int64
+	global.DB.Model(&model.Spot{}).Count(&spotsCount)
 	if spotNo != "0" {
 		spot := model.Spot{}
 		result := global.DB.Where("spot_no=?", spotNo).First(&spot)
@@ -141,8 +145,8 @@ func GetSpotList(pn, psize int, spotNo string) ([]model.SpotResp, int, error) {
 			Lat:     block.Lat,
 			Lgt:     block.Lgt,
 		})
-		count := 1
-		return data, count, result.Error
+		count := spotsCount
+		return data, int(count), result.Error
 	} else {
 		result := global.DB.Preload("Block").Scopes(Paginate(pn, psize)).Find(&spots)
 		var data []model.SpotResp
@@ -154,7 +158,7 @@ func GetSpotList(pn, psize int, spotNo string) ([]model.SpotResp, int, error) {
 				Lgt:     v.Block.Lgt,
 			})
 		}
-		count := int(result.RowsAffected)
-		return data, count, result.Error
+		count := spotsCount
+		return data, int(count), result.Error
 	}
 }
