@@ -130,7 +130,7 @@ func GetBlockList(pn, psize int) ([]model.BLockResp, int, error) {
 
 func GetSpotList(pn, psize int, spotNo string) ([]model.SpotResp, int, error) {
 	var spots []model.Spot
-	if spotNo == "0" {
+	if spotNo != "0" {
 		zap.S().Info("spotNo=0")
 		spot := model.Spot{}
 		result := global.DB.Where("spot_no=?", spotNo).First(&spot)
