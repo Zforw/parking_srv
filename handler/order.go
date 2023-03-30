@@ -29,8 +29,7 @@ func CreateOrder(number string, start time.Time) error {
 		return errors.New("车牌不存在")
 	}
 	o0 := model.OrderInfo{}
-	//不应该试用first
-	if result := global.DB.Where("license_id=?", l.ID).First(&o0); result.RowsAffected != 0 {
+	if result := global.DB.Where("license_id=? AND status <> ?", l.ID, "TRADE_SUCCESS").First(&o0); result.RowsAffected != 0 {
 		if o0.Status != "TRADE_SUCCESS" {
 			return errors.New("订单已存在")
 		}
@@ -53,7 +52,7 @@ func CreateOrder(number string, start time.Time) error {
 func GetOrderList(pn, psize int) ([]model.OrderResp, int, error) {
 	var oo []model.OrderInfo
 	var data []model.OrderResp
-	result := global.DB.Preload("License").Scopes(Paginate(0, 90)).Find(&oo)
+	result := global.DB.Preload("License").Scopes(Paginate(pn, psize)).Find(&oo)
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
@@ -126,10 +125,11 @@ func UpdateOrder(number, pay_type string) error {
 		return errors.New("车牌不存在")
 	}
 	o := model.OrderInfo{}
-	if result := global.DB.Where("license_id=? AND status <> ?", l.ID, "TRADE_SUCCESS").First(&l); result.RowsAffected == 0 {
+	if result := global.DB.Where("license_id=? AND status=?", l.ID, "PAYING").First(&l); result.RowsAffected == 0 {
 		return errors.New("订单不存在")
 	}
 	o.PayType = pay_type
+	o.Status = "TRADE_SUCCESS"
 	res := global.DB.Save(&o)
 	return res.Error
 }
@@ -140,10 +140,11 @@ func CalcMoney(number string, end time.Time) (float64, error) {
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
 		return 0, errors.New("车牌不存在")
 	}
-	if result := global.DB.Where("license_id=?", l.ID).First(&o); result.RowsAffected == 0 {
+	if result := global.DB.Where("license_id=? AND status=?", l.ID, "WAIT_BUYER_PAY").First(&o); result.RowsAffected == 0 {
 		return 0, errors.New("订单不存在")
 	}
 	o.PayTime = &end
+	o.Status = "PAYING"
 	dur := time.Since(*o.StartTime)
 	res := global.DB.Save(&o)
 	return dur.Hours() * 4, res.Error
