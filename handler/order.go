@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"fmt"
+	"math"
 	"math/rand"
 	"parking/global"
 	"parking/model"
@@ -146,12 +147,32 @@ func CalcMoney(number string, end time.Time) (float64, error) {
 	o.PayTime = &end
 	o.Status = "PAYING"
 	dur := time.Since(*o.StartTime)
-	o.OrderMount = float32(dur.Hours() * 4)
+	ch, err := GetCharge()
+	if err != nil {
+		return 0, err
+	}
+	var money float32
+	if dur <= time.Duration(ch.A)*time.Minute {
+		money = float32(ch.B)
+	} else if dur.Hours() > 24 {
+		days := int(math.Floor(dur.Hours() / 24))
+		hours := dur - time.Duration(days)*time.Hour*24
+		if hours <= time.Hour {
+			money = float32(days*ch.D + ch.B)
+		} else {
+			remaining := int(math.Ceil(float64((hours - time.Hour) / time.Hour)))
+			money = float32(days*ch.D + ch.B + remaining*ch.D)
+		}
+	} else {
+		remaining := int(math.Ceil(float64((dur - time.Hour) / time.Hour)))
+		money = float32(ch.B + remaining*ch.D)
+	}
+	o.OrderMount = money
 	res := global.DB.Save(&o)
-	return dur.Hours() * 4, res.Error
+	return float64(money), res.Error
 }
 
-func SetMoney(a, b, c, d int) error {
+func SetCharge(a, b, c, d int) error {
 	ch := model.Charge{}
 	ch.ID = 1
 	if result := global.DB.First(&ch); result.RowsAffected == 0 {
@@ -170,7 +191,7 @@ func SetMoney(a, b, c, d int) error {
 	return res.Error
 }
 
-func GetMoney() (model.ChargeResp, error) {
+func GetCharge() (model.ChargeResp, error) {
 	ch := model.Charge{}
 	ch.ID = 1
 	if result := global.DB.First(&ch); result.RowsAffected == 0 {

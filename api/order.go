@@ -133,14 +133,14 @@ func CalcMoney(ctx *gin.Context) {
 	})
 }
 
-func SetMoney(ctx *gin.Context) {
+func SetCharge(ctx *gin.Context) {
 	m := form.SetMoneyForm{}
 	if err := ctx.ShouldBind(&m); err != nil {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
 	zap.S().Info("【设置收费标准】 ", m)
-	err := handler.SetMoney(m.A, m.B, m.C, m.D)
+	err := handler.SetCharge(m.A, m.B, m.C, m.D)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -153,9 +153,9 @@ func SetMoney(ctx *gin.Context) {
 	})
 }
 
-func GetMoney(ctx *gin.Context) {
+func GetCharge(ctx *gin.Context) {
 	zap.S().Info("【查看收费标准】")
-	money, err := handler.GetMoney()
+	money, err := handler.GetCharge()
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{

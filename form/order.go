@@ -6,7 +6,7 @@ type CreateOrderForm struct {
 
 type UpdateOrderForm struct {
 	Number  string `json:"number" binding:"required"`
-	PayType string `json:"spotNo" binding:"required"` //alipay(支付宝)， wechat(微信)，cash(现金)
+	PayType string `json:"payType" binding:"required"` //alipay(支付宝)， wechat(微信)，cash(现金)
 }
 
 type SetMoneyForm struct {
