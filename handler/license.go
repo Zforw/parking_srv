@@ -7,6 +7,14 @@ import (
 	"parking/model"
 )
 
+func LStatus2Chn(status string) string {
+	if status == "IN" {
+		return "入内"
+	} else {
+		return "离开"
+	}
+}
+
 func CreateLicense(number string, openid string) error {
 	user := model.User{
 		OpenId: openid,
@@ -60,7 +68,7 @@ func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
 		data = append(data, model.LicenseResp{
 			Number: v.Number,
 			OpenId: v.User.OpenId,
-			Status: v.Status,
+			Status: LStatus2Chn(v.Status),
 		})
 	}
 	count := int(result.RowsAffected)
@@ -81,7 +89,7 @@ func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int,
 	for _, v := range licenses {
 		data = append(data, model.UserLicenseResp{
 			Number: v.Number,
-			Status: v.Status,
+			Status: LStatus2Chn(v.Status),
 		})
 	}
 	count := int(result.RowsAffected)

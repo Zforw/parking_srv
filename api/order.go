@@ -54,8 +54,8 @@ func UpdateOrder(ctx *gin.Context) {
 }
 
 func GetOrderList(ctx *gin.Context) {
-	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
-	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "90"))
+	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "1"))
+	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "10"))
 	zap.S().Info("【获取订单列表】pn=", pn, ", psize=", pSize)
 	data, count, err := handler.GetOrderList(pn, pSize)
 	if err != nil {

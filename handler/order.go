@@ -24,6 +24,30 @@ func GenerateOrderSn(userId int32) string {
 	return orderSn
 }
 
+func Status2Chn(status string) string {
+	switch status {
+	case "WAIT_BUYER_PAY":
+		return "待支付"
+	case "PAYING":
+		return "支付中"
+	case "TRADE_SUCCESS":
+		return "交易成功"
+	}
+	return "未知"
+}
+
+func PayType2Chn(status string) string {
+	switch status {
+	case "cash":
+		return "现金"
+	case "alipay":
+		return "支付宝"
+	case "wechat":
+		return "微信支付"
+	}
+	return "未知"
+}
+
 func CreateOrder(number string, start time.Time) error {
 	l := model.License{}
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
@@ -57,8 +81,8 @@ func GetOrderList(pn, psize int) ([]model.OrderResp, int, error) {
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
-			PayType:       v.PayType,
-			Status:        v.Status,
+			PayType:       PayType2Chn(v.PayType),
+			Status:        Status2Chn(v.Status),
 			OrderMount:    v.OrderMount,
 			StartTime:     v.StartTime,
 			PayTime:       v.PayTime,
@@ -82,8 +106,8 @@ func GetUserOrderList(id string) ([]model.OrderResp, int, error) {
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
-			PayType:       v.PayType,
-			Status:        v.Status,
+			PayType:       PayType2Chn(v.PayType),
+			Status:        Status2Chn(v.Status),
 			OrderMount:    v.OrderMount,
 			StartTime:     v.StartTime,
 			PayTime:       v.PayTime,
@@ -107,8 +131,8 @@ func GetLicenseOrderList(number string) ([]model.OrderResp, int, error) {
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
-			PayType:       v.PayType,
-			Status:        v.Status,
+			PayType:       PayType2Chn(v.PayType),
+			Status:        Status2Chn(v.Status),
 			OrderMount:    v.OrderMount,
 			StartTime:     v.StartTime,
 			PayTime:       v.PayTime,
