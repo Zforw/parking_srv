@@ -114,11 +114,11 @@ func GetLicenseOrderList(ctx *gin.Context) {
 	}
 }
 
-func GetMoney(ctx *gin.Context) {
+func CalcMoney(ctx *gin.Context) {
 	end := time.Now()
 	number := ctx.Query("number")
 	zap.S().Info("【计算金额】 ", number, end.Format("2006-01-02-15:04:05"))
-	money, err := handler.GetMoney(number, end)
+	money, err := handler.CalcMoney(number, end)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -130,5 +130,42 @@ func GetMoney(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"error": "",
 		"money": money,
+	})
+}
+
+func SetMoney(ctx *gin.Context) {
+	m := form.SetMoneyForm{}
+	if err := ctx.ShouldBind(&m); err != nil {
+		utils.HandleValidatorError(ctx, err)
+		return
+	}
+	zap.S().Info("【设置收费标准】 ", m)
+	err := handler.SetMoney(m.A, m.B, m.C, m.D)
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"error": "",
+	})
+}
+
+func GetMoney(ctx *gin.Context) {
+	zap.S().Info("【查看收费标准】")
+	money, err := handler.GetMoney()
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+			"data":  nil,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"error": "",
+		"data":  money,
 	})
 }

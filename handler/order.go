@@ -29,6 +29,7 @@ func CreateOrder(number string, start time.Time) error {
 		return errors.New("车牌不存在")
 	}
 	o0 := model.OrderInfo{}
+	//不应该试用first
 	if result := global.DB.Where("license_id=?", l.ID).First(&o0); result.RowsAffected != 0 {
 		if o0.Status != "TRADE_SUCCESS" {
 			return errors.New("订单已存在")
@@ -118,24 +119,22 @@ func GetLicenseOrderList(number string) ([]model.OrderResp, int, error) {
 	return data, count, result.Error
 }
 
+// UpdateOrder 查找最新的待支付订单
 func UpdateOrder(number, pay_type string) error {
 	l := model.License{}
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
 		return errors.New("车牌不存在")
 	}
-	o := model.OrderInfo{
-		UserID:    l.UserID,
-		User:      l.User,
-		OrderSn:   GenerateOrderSn(l.UserID),
-		Status:    "WAIT_BUYER_PAY",
-		LicenseID: l.ID,
-		License:   l,
+	o := model.OrderInfo{}
+	if result := global.DB.Where("license_id=? AND status <> ?", l.ID, "TRADE_SUCCESS").First(&l); result.RowsAffected == 0 {
+		return errors.New("订单不存在")
 	}
-	res := global.DB.Create(&o)
+	o.PayType = pay_type
+	res := global.DB.Save(&o)
 	return res.Error
 }
 
-func GetMoney(number string, end time.Time) (float64, error) {
+func CalcMoney(number string, end time.Time) (float64, error) {
 	o := model.OrderInfo{}
 	l := model.License{}
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
@@ -148,4 +147,37 @@ func GetMoney(number string, end time.Time) (float64, error) {
 	dur := time.Since(*o.StartTime)
 	res := global.DB.Save(&o)
 	return dur.Hours() * 4, res.Error
+}
+
+func SetMoney(a, b, c, d int) error {
+	ch := model.Charge{}
+	ch.ID = 1
+	if result := global.DB.First(&ch); result.RowsAffected == 0 {
+		ch.A = int32(a)
+		ch.B = int32(b)
+		ch.C = int32(c)
+		ch.D = int32(d)
+		res := global.DB.Create(&ch)
+		return res.Error
+	}
+	ch.A = int32(a)
+	ch.B = int32(b)
+	ch.C = int32(c)
+	ch.D = int32(d)
+	res := global.DB.Save(&ch)
+	return res.Error
+}
+
+func GetMoney() (model.ChargeResp, error) {
+	ch := model.Charge{}
+	ch.ID = 1
+	if result := global.DB.First(&ch); result.RowsAffected == 0 {
+		return model.ChargeResp{}, errors.New("数据不存在")
+	}
+	return model.ChargeResp{
+		A: int(ch.A),
+		B: int(ch.B),
+		C: int(ch.C),
+		D: int(ch.D),
+	}, nil
 }

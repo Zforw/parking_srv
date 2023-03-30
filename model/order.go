@@ -55,6 +55,13 @@ type Charge struct {
 	D int32
 }
 
+type ChargeResp struct {
+	A int `json:"a"`
+	B int `json:"b"`
+	C int `json:"c"`
+	D int `json:"d"`
+}
+
 func (Charge) TableName() string {
 	return "charge"
 }
