@@ -140,7 +140,7 @@ func SetCharge(ctx *gin.Context) {
 		return
 	}
 	zap.S().Info("【设置收费标准】 ", m)
-	err := handler.SetCharge(m.A, m.B, m.C, m.D)
+	err := handler.SetCharge(m.A, m.B, m.C)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{

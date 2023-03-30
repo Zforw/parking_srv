@@ -176,41 +176,47 @@ func CalcMoney(number string, end time.Time) (float64, error) {
 		return 0, err
 	}
 	var money float32
-	if dur <= time.Duration(ch.A)*time.Minute {
-		money = float32(ch.B)
+	if dur <= time.Hour {
+		money = float32(ch.A)
 	} else if dur.Hours() > 24 {
 		days := int(math.Floor(dur.Hours() / 24))
-		hours := dur - time.Duration(days)*time.Hour*24
-		if hours <= time.Hour {
-			money = float32(days*ch.D + ch.B)
+		remaining := dur - time.Duration(days)*time.Hour*24
+		if remaining <= time.Hour {
+			money = float32(days*ch.C + ch.A)
 		} else {
-			remaining := int(math.Ceil(float64((hours - time.Hour) / time.Hour)))
-			money = float32(days*ch.D + ch.B + remaining*ch.D)
+			m := int(math.Ceil(float64((remaining-time.Hour)/time.Hour)))*ch.B + ch.A
+			if m >= ch.C {
+				money = float32(ch.C)
+			} else {
+				money = float32(m)
+			}
 		}
 	} else {
-		remaining := int(math.Ceil(float64((dur - time.Hour) / time.Hour)))
-		money = float32(ch.B + remaining*ch.D)
+		m := int(math.Ceil(float64((dur-time.Hour)/time.Hour)))*ch.B + ch.A
+		if m >= ch.C {
+			money = float32(ch.C)
+		} else {
+			money = float32(m)
+		}
 	}
 	o.OrderMount = money
 	res := global.DB.Save(&o)
 	return float64(money), res.Error
 }
 
-func SetCharge(a, b, c, d int) error {
+func SetCharge(a, b, c int) error {
 	ch := model.Charge{}
 	ch.ID = 1
 	if result := global.DB.First(&ch); result.RowsAffected == 0 {
 		ch.A = int32(a)
 		ch.B = int32(b)
 		ch.C = int32(c)
-		ch.D = int32(d)
 		res := global.DB.Create(&ch)
 		return res.Error
 	}
 	ch.A = int32(a)
 	ch.B = int32(b)
 	ch.C = int32(c)
-	ch.D = int32(d)
 	res := global.DB.Save(&ch)
 	return res.Error
 }
@@ -225,6 +231,5 @@ func GetCharge() (model.ChargeResp, error) {
 		A: int(ch.A),
 		B: int(ch.B),
 		C: int(ch.C),
-		D: int(ch.D),
 	}, nil
 }

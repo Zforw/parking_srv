@@ -52,14 +52,12 @@ type Charge struct {
 	A int32
 	B int32
 	C int32
-	D int32
 }
 
 type ChargeResp struct {
 	A int `json:"a"`
 	B int `json:"b"`
 	C int `json:"c"`
-	D int `json:"d"`
 }
 
 func (Charge) TableName() string {
