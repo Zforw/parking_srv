@@ -13,5 +13,4 @@ type SetMoneyForm struct {
 	A int `json:"a" binding:"required"`
 	B int `json:"b" binding:"required"`
 	C int `json:"c" binding:"required"`
-	D int `json:"d" binding:"required"`
 }
