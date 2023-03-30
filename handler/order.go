@@ -125,7 +125,7 @@ func UpdateOrder(number, pay_type string) error {
 		return errors.New("车牌不存在")
 	}
 	o := model.OrderInfo{}
-	if result := global.DB.Where("license_id=? AND status=?", l.ID, "PAYING").First(&l); result.RowsAffected == 0 {
+	if result := global.DB.Where("license_id=? AND status=?", l.ID, "PAYING").First(&o); result.RowsAffected == 0 {
 		return errors.New("订单不存在")
 	}
 	o.PayType = pay_type
@@ -146,6 +146,7 @@ func CalcMoney(number string, end time.Time) (float64, error) {
 	o.PayTime = &end
 	o.Status = "PAYING"
 	dur := time.Since(*o.StartTime)
+	o.OrderMount = float32(dur.Hours() * 4)
 	res := global.DB.Save(&o)
 	return dur.Hours() * 4, res.Error
 }
