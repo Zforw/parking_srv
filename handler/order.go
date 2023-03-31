@@ -186,9 +186,9 @@ func CalcMoney(number string, end time.Time) (float64, error) {
 		} else {
 			m := int(math.Ceil(float64((remaining-time.Hour)/time.Hour)))*ch.B + ch.A
 			if m >= ch.C {
-				money = float32(ch.C)
+				money = float32(ch.C * (days + 1))
 			} else {
-				money = float32(m)
+				money = float32(m + ch.C*days)
 			}
 		}
 	} else {
