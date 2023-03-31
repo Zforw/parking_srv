@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"parking/form"
 	"parking/handler"
+	"parking/model"
 	"parking/utils"
 	"strconv"
 	"strings"
@@ -24,13 +25,15 @@ func CreateOrder(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			"code": 1,
+			"msg":  "订单创建失败" + err.Error(),
 		})
 		return
 	}
 	zap.S().Info("修改车牌 ", o.Number, " 状态为IN")
 	ctx.JSON(http.StatusOK, gin.H{
-		"error": "",
+		"code": 0,
+		"msg":  "订单创建成功",
 	})
 }
 
@@ -45,12 +48,14 @@ func UpdateOrder(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			"code": 1,
+			"msg":  "订单状态更新失败，" + err.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"error": "",
+		"code": 0,
+		"msg":  "订单状态更新成功",
 	})
 }
 
@@ -67,15 +72,17 @@ func GetOrderList(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"code":  1,
 			"count": 0,
 			"data":  nil,
-			"error": err.Error(),
+			"msg":   "获取订单列表失败，" + err.Error(),
 		})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
+			"code":  0,
 			"count": count,
 			"data":  data,
-			"error": "",
+			"msg":   "获取订单列表成功",
 		})
 	}
 }
@@ -87,15 +94,17 @@ func GetUserOrderList(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"count": 0,
-			"data":  nil,
-			"error": err.Error(),
+			"code":  1,
+			"count": count,
+			"data":  data,
+			"msg":   "获取用户订单列表失败，" + err.Error(),
 		})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
+			"code":  0,
 			"count": count,
 			"data":  data,
-			"error": "",
+			"msg":   "获取用户订单列表成功",
 		})
 	}
 }
@@ -107,15 +116,17 @@ func GetLicenseOrderList(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"count": 0,
-			"data":  nil,
-			"error": err.Error(),
+			"code":  1,
+			"count": count,
+			"data":  data,
+			"msg":   "获取订单列表失败" + err.Error(),
 		})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
+			"code":  0,
 			"count": count,
 			"data":  data,
-			"error": "",
+			"msg":   "获取车牌订单列表成功",
 		})
 	}
 }
@@ -128,14 +139,20 @@ func CalcMoney(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-			"money": 0,
+			"code": 1,
+			"msg":  "计算金额失败，" + err.Error(),
+			"data": model.MoneyResp{
+				Money: 0,
+			},
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"error": "",
-		"money": money,
+		"code": 0,
+		"msg":  "计算金额成功",
+		"data": model.MoneyResp{
+			Money: money,
+		},
 	})
 }
 
@@ -150,12 +167,14 @@ func SetCharge(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			"code": 1,
+			"msg":  "设置收费标准失败，" + err.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"error": "",
+		"code": 0,
+		"msg":  "设置收费标准成功",
 	})
 }
 
@@ -165,13 +184,15 @@ func GetCharge(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-			"data":  nil,
+			"code": 1,
+			"msg":  "获取收费标准失败，" + err.Error(),
+			"data": nil,
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"error": "",
-		"data":  money,
+		"code": 0,
+		"msg":  "获取收费标准成功",
+		"data": money,
 	})
 }
