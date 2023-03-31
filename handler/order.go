@@ -48,6 +48,14 @@ func PayType2Chn(status string) string {
 	return "未知"
 }
 
+func PayTime2Chn(p *time.Time) string {
+	if p == nil {
+		return ""
+	} else {
+		return p.Format("2006-01-02 15:04:05")
+	}
+}
+
 func CreateOrder(number string, start time.Time) error {
 	l := model.License{}
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
@@ -85,8 +93,8 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 				PayType:       PayType2Chn(v.PayType),
 				Status:        Status2Chn(v.Status),
 				OrderMount:    v.OrderMount,
-				StartTime:     v.StartTime,
-				PayTime:       v.PayTime,
+				StartTime:     PayTime2Chn(v.StartTime),
+				PayTime:       PayTime2Chn(v.PayTime),
 				LicenseNumber: v.License.Number,
 			})
 		}
@@ -100,8 +108,8 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 					PayType:       PayType2Chn(v.PayType),
 					Status:        Status2Chn(v.Status),
 					OrderMount:    v.OrderMount,
-					StartTime:     v.StartTime,
-					PayTime:       v.PayTime,
+					StartTime:     PayTime2Chn(v.StartTime),
+					PayTime:       PayTime2Chn(v.PayTime),
 					LicenseNumber: v.License.Number,
 				})
 			}
@@ -127,8 +135,8 @@ func GetUserOrderList(id string) ([]model.OrderResp, int, error) {
 			PayType:       PayType2Chn(v.PayType),
 			Status:        Status2Chn(v.Status),
 			OrderMount:    v.OrderMount,
-			StartTime:     v.StartTime,
-			PayTime:       v.PayTime,
+			StartTime:     PayTime2Chn(v.StartTime),
+			PayTime:       PayTime2Chn(v.PayTime),
 			LicenseNumber: v.License.Number,
 		})
 	}
@@ -152,8 +160,8 @@ func GetLicenseOrderList(number string) ([]model.OrderResp, int, error) {
 			PayType:       PayType2Chn(v.PayType),
 			Status:        Status2Chn(v.Status),
 			OrderMount:    v.OrderMount,
-			StartTime:     v.StartTime,
-			PayTime:       v.PayTime,
+			StartTime:     PayTime2Chn(v.StartTime),
+			PayTime:       PayTime2Chn(v.PayTime),
 			LicenseNumber: v.License.Number,
 		})
 	}
@@ -188,7 +196,8 @@ func CalcMoney(number string, end time.Time) (float64, error) {
 	}
 	o.PayTime = &end
 	o.Status = "PAYING"
-	dur := time.Since(*o.StartTime)
+	dur := end.Sub(*o.StartTime)
+	//dur := time.Since(*o.StartTime)
 	ch, err := GetCharge()
 	if err != nil {
 		return 0, err
