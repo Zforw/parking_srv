@@ -8,6 +8,7 @@ import (
 	"parking/handler"
 	"parking/utils"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -56,8 +57,13 @@ func UpdateOrder(ctx *gin.Context) {
 func GetOrderList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "1"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "10"))
-	zap.S().Info("【获取订单列表】pn=", pn, ", psize=", pSize)
-	data, count, err := handler.GetOrderList(pn, pSize)
+	dates := ctx.DefaultQuery("date", "1000-01-01")
+	date := strings.Split(dates, "-")
+	year, _ := strconv.Atoi(date[0])
+	month, _ := strconv.Atoi(date[1])
+	day, _ := strconv.Atoi(date[2])
+	zap.S().Info("【获取订单列表】pn=", pn, ", psize=", pSize, ", year=", year, ", month=", month, ", day=", day)
+	data, count, err := handler.GetOrderList(pn, pSize, year, month, day)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{

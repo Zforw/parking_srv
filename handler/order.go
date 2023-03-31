@@ -74,20 +74,38 @@ func CreateOrder(number string, start time.Time) error {
 	return res.Error
 }
 
-func GetOrderList(pn, psize int) ([]model.OrderResp, int, error) {
+func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, error) {
 	var oo []model.OrderInfo
 	var data []model.OrderResp
 	result := global.DB.Preload("License").Scopes(Paginate(pn, psize)).Find(&oo)
-	for _, v := range oo {
-		data = append(data, model.OrderResp{
-			OrderSn:       v.OrderSn,
-			PayType:       PayType2Chn(v.PayType),
-			Status:        Status2Chn(v.Status),
-			OrderMount:    v.OrderMount,
-			StartTime:     v.StartTime,
-			PayTime:       v.PayTime,
-			LicenseNumber: v.License.Number,
-		})
+	if year == 1000 {
+		for _, v := range oo {
+			data = append(data, model.OrderResp{
+				OrderSn:       v.OrderSn,
+				PayType:       PayType2Chn(v.PayType),
+				Status:        Status2Chn(v.Status),
+				OrderMount:    v.OrderMount,
+				StartTime:     v.StartTime,
+				PayTime:       v.PayTime,
+				LicenseNumber: v.License.Number,
+			})
+		}
+	} else {
+		date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
+		nextDate := date.Add(time.Hour * 24)
+		for _, v := range oo {
+			if v.StartTime.After(date) && v.StartTime.Before(nextDate) {
+				data = append(data, model.OrderResp{
+					OrderSn:       v.OrderSn,
+					PayType:       PayType2Chn(v.PayType),
+					Status:        Status2Chn(v.Status),
+					OrderMount:    v.OrderMount,
+					StartTime:     v.StartTime,
+					PayTime:       v.PayTime,
+					LicenseNumber: v.License.Number,
+				})
+			}
+		}
 	}
 	count := int(result.RowsAffected)
 	return data, count, result.Error
