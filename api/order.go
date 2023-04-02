@@ -89,8 +89,10 @@ func GetOrderList(ctx *gin.Context) {
 
 func GetUserOrderList(ctx *gin.Context) {
 	id := ctx.Query("id")
+	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "1"))
+	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "10"))
 	zap.S().Info("【获取用户订单列表】 open_id=", id)
-	data, count, err := handler.GetUserOrderList(id)
+	data, count, err := handler.GetUserOrderList(pn, pSize, id)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -111,8 +113,10 @@ func GetUserOrderList(ctx *gin.Context) {
 
 func GetLicenseOrderList(ctx *gin.Context) {
 	number := ctx.Query("number")
+	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "1"))
+	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "10"))
 	zap.S().Info("【获取车牌订单列表】 number=", number)
-	data, count, err := handler.GetLicenseOrderList(number)
+	data, count, err := handler.GetLicenseOrderList(pn, pSize, number)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{

@@ -114,7 +114,7 @@ func UpdateBlock(blockNo, newBlockNo string, lat, lgt float64) error {
 
 func GetBlockList(pn, psize int) ([]model.BLockResp, int, error) {
 	var blocksCount int64
-	global.DB.Model(&model.Spot{}).Count(&blocksCount)
+	global.DB.Model(&model.Block{}).Count(&blocksCount)
 	var blocks []model.Block
 	result := global.DB.Scopes(Paginate(pn, psize)).Find(&blocks)
 	var data []model.BLockResp

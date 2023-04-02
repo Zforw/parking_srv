@@ -85,10 +85,10 @@ func CreateOrder(number string, start time.Time) error {
 func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, error) {
 	var oo []model.OrderInfo
 	var data []model.OrderResp
-	var ordersCount int64
-	global.DB.Model(&model.OrderInfo{}).Count(&ordersCount)
-	result := global.DB.Preload("License").Scopes(Paginate(pn, psize)).Find(&oo)
 	if year == 1000 {
+		var ordersCount int64
+		global.DB.Model(&model.OrderInfo{}).Count(&ordersCount)
+		result := global.DB.Preload("License").Scopes(Paginate(pn, psize)).Find(&oo)
 		for _, v := range oo {
 			data = append(data, model.OrderResp{
 				OrderSn:       v.OrderSn,
@@ -100,7 +100,10 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 				LicenseNumber: v.License.Number,
 			})
 		}
+		count := ordersCount
+		return data, int(count), result.Error
 	} else {
+		result := global.DB.Preload("License").Find(&oo)
 		date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
 		nextDate := date.Add(time.Hour * 24)
 		for _, v := range oo {
@@ -116,23 +119,34 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 				})
 			}
 		}
+		count := result.RowsAffected
+		if len(data) <= psize {
+			return data, int(count), result.Error
+		} else {
+			st := pn*psize - 1
+			ed := st + psize
+			if ed >= len(data) {
+				ed = len(data) - 1
+			}
+			return data[st : ed+1], int(count), result.Error
+		}
 	}
-	count := ordersCount
-	return data, int(count), result.Error
+
 }
 
-func GetUserOrderList(id string) ([]model.OrderResp, int, error) {
+func GetUserOrderList(pn, psize int, id string) ([]model.OrderResp, int, error) {
 	var oo []model.OrderInfo
 	u := model.User{}
 	var ordersCount int64
-	global.DB.Model(&model.OrderInfo{}).Count(&ordersCount)
-	if result := global.DB.Where("open_id=?", id).First(&u); result.RowsAffected == 0 {
+	result := global.DB.Where("open_id=?", id).First(&u)
+	if result.RowsAffected == 0 {
 		return nil, 0, errors.New("用户不存在")
 	}
+	ordersCount = result.RowsAffected
 	var data []model.OrderResp
 	localDB := global.DB
 	localDB = localDB.Where("user_id=?", u.ID)
-	result := localDB.Preload("License").Scopes(Paginate(0, 90)).Find(&oo)
+	result = localDB.Preload("License").Scopes(Paginate(pn, psize)).Find(&oo)
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
@@ -148,7 +162,7 @@ func GetUserOrderList(id string) ([]model.OrderResp, int, error) {
 	return data, count, result.Error
 }
 
-func GetLicenseOrderList(number string) ([]model.OrderResp, int, error) {
+func GetLicenseOrderList(pn, psize int, number string) ([]model.OrderResp, int, error) {
 	var oo []model.OrderInfo
 	l := model.License{}
 	var ordersCount int64
@@ -159,7 +173,7 @@ func GetLicenseOrderList(number string) ([]model.OrderResp, int, error) {
 	var data []model.OrderResp
 	localDB := global.DB
 	localDB = localDB.Where("license_id=?", l.ID)
-	result := localDB.Preload("License").Scopes(Paginate(0, 90)).Find(&oo)
+	result := localDB.Preload("License").Scopes(Paginate(pn, psize)).Find(&oo)
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
