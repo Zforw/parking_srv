@@ -85,6 +85,8 @@ func CreateOrder(number string, start time.Time) error {
 func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, error) {
 	var oo []model.OrderInfo
 	var data []model.OrderResp
+	var ordersCount int64
+	global.DB.Model(&model.OrderInfo{}).Count(&ordersCount)
 	result := global.DB.Preload("License").Scopes(Paginate(pn, psize)).Find(&oo)
 	if year == 1000 {
 		for _, v := range oo {
@@ -115,13 +117,15 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 			}
 		}
 	}
-	count := int(result.RowsAffected)
-	return data, count, result.Error
+	count := ordersCount
+	return data, int(count), result.Error
 }
 
 func GetUserOrderList(id string) ([]model.OrderResp, int, error) {
 	var oo []model.OrderInfo
 	u := model.User{}
+	var ordersCount int64
+	global.DB.Model(&model.OrderInfo{}).Count(&ordersCount)
 	if result := global.DB.Where("open_id=?", id).First(&u); result.RowsAffected == 0 {
 		return nil, 0, errors.New("用户不存在")
 	}
@@ -140,13 +144,15 @@ func GetUserOrderList(id string) ([]model.OrderResp, int, error) {
 			LicenseNumber: v.License.Number,
 		})
 	}
-	count := int(result.RowsAffected)
+	count := int(ordersCount)
 	return data, count, result.Error
 }
 
 func GetLicenseOrderList(number string) ([]model.OrderResp, int, error) {
 	var oo []model.OrderInfo
 	l := model.License{}
+	var ordersCount int64
+	global.DB.Model(&model.OrderInfo{}).Count(&ordersCount)
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
 		return nil, 0, errors.New("车牌不存在")
 	}
@@ -165,7 +171,7 @@ func GetLicenseOrderList(number string) ([]model.OrderResp, int, error) {
 			LicenseNumber: v.License.Number,
 		})
 	}
-	count := int(result.RowsAffected)
+	count := int(ordersCount)
 	return data, count, result.Error
 }
 
