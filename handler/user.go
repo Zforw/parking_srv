@@ -55,7 +55,9 @@ func GetUserList(pn, psize int) ([]model.UserResp, int, error) {
 	mauth := map[int]string{0: "普通用户", 1: "管理员"}
 	var data []model.UserResp
 	for _, v := range users {
-		data = append(data, model.UserResp{OpenId: v.OpenId, Auth: mauth[v.Auth]})
+		if v.Auth == 1 {
+			data = append(data, model.UserResp{OpenId: v.OpenId, Auth: mauth[v.Auth]})
+		}
 	}
 	count := adminCount
 	return data, int(count), result.Error
