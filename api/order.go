@@ -207,7 +207,7 @@ func Recognize(ctx *gin.Context) {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
-	zap.S().Info("【识别车牌】", m.Base64)
+	zap.S().Info("【识别车牌】")
 	number, err := handler.Recognize(m.Base64)
 	if err != nil {
 		zap.S().Error(err.Error())
