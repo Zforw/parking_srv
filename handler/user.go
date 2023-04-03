@@ -48,6 +48,8 @@ func Login(openid, pass string) error {
 }
 
 func GetUserList(pn, psize int) ([]model.UserResp, int, error) {
+	var adminCount int64
+	global.DB.Model(&model.User{}).Where("auth=?", 1).Count(&adminCount)
 	var users []model.User
 	result := Paginate(pn, psize)(global.DB).Find(&users)
 	mauth := map[int]string{0: "普通用户", 1: "管理员"}
@@ -55,6 +57,6 @@ func GetUserList(pn, psize int) ([]model.UserResp, int, error) {
 	for _, v := range users {
 		data = append(data, model.UserResp{OpenId: v.OpenId, Auth: mauth[v.Auth]})
 	}
-	count := int(result.RowsAffected)
-	return data, count, result.Error
+	count := adminCount
+	return data, int(count), result.Error
 }
