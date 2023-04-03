@@ -68,6 +68,7 @@ func CreateOrder(number string, start time.Time) error {
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
 		//return errors.New("车牌不存在")
 		CreateLicense(number, "anonymous")
+		global.DB.Where("number=?", number).First(&l)
 	}
 	o0 := model.OrderInfo{}
 	if result := global.DB.Where("license_id=? AND status <> ?", l.ID, "TRADE_SUCCESS").First(&o0); result.RowsAffected != 0 {
