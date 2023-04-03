@@ -202,12 +202,12 @@ func GetCharge(ctx *gin.Context) {
 }
 
 func Recognize(ctx *gin.Context) {
-	zap.S().Info("【识别车牌】")
 	m := form.NumberImageForm{}
 	if err := ctx.ShouldBind(&m); err != nil {
 		utils.HandleValidatorError(ctx, err)
 		return
 	}
+	zap.S().Info("【识别车牌】", m.Base64)
 	number, err := handler.Recognize(m.Base64)
 	if err != nil {
 		zap.S().Error(err.Error())
