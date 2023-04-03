@@ -19,5 +19,6 @@ func InitOrderRouter(group *gin.RouterGroup) {
 		OrderRouter.GET("calc_money", middlewares.JWTAuth(), api.CalcMoney)
 		OrderRouter.POST("set_charge", middlewares.JWTAuth(), api.SetCharge)
 		OrderRouter.GET("get_charge", middlewares.JWTAuth(), api.GetCharge)
+		OrderRouter.GET("recognize", middlewares.JWTAuth(), api.Recognize)
 	}
 }

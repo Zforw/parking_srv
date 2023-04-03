@@ -1,12 +1,19 @@
 package handler
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"go.uber.org/zap"
+	"io/ioutil"
 	"math"
 	"math/rand"
+	"net/http"
+	"net/url"
+	"parking/form"
 	"parking/global"
 	"parking/model"
+	"strings"
 	"time"
 )
 
@@ -18,7 +25,7 @@ func GenerateOrderSn(userId int32) string {
 	now := time.Now()
 	rand.Seed(time.Now().UnixNano())
 	orderSn := fmt.Sprintf("%d%d%d%d%d%d%d%d",
-		now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Nanosecond(),
+		now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second(),
 		userId, rand.Intn(90)+10,
 	)
 	return orderSn
@@ -278,5 +285,63 @@ func GetCharge() (model.ChargeResp, error) {
 		A: int(ch.A),
 		B: int(ch.B),
 		C: int(ch.C),
+	}, nil
+}
+
+const API_KEY = "jS5yvCqC2BzcBIScnxQid6jA"
+const SECRET_KEY = "hxczoXkqp2Plx0kInLiTewyxWn3Ssorv"
+
+func GetAccessToken() string {
+	url := "https://aip.baidubce.com/oauth/2.0/token"
+	postData := fmt.Sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s", API_KEY, SECRET_KEY)
+	resp, err := http.Post(url, "application/x-www-form-urlencoded", strings.NewReader(postData))
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	accessTokenObj := map[string]string{}
+	json.Unmarshal([]byte(body), &accessTokenObj)
+	return accessTokenObj["access_token"]
+}
+
+func Recognize(image string) (model.NumberResp, error) {
+	URL := "https://aip.baidubce.com/rest/2.0/ocr/v1/license_plate?access_token=" + GetAccessToken()
+	payload := strings.NewReader("image=" + url.QueryEscape(image))
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", URL, payload)
+
+	if err != nil {
+		zap.S().Error(err)
+		return model.NumberResp{}, err
+	}
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("Accept", "application/json")
+
+	res, err := client.Do(req)
+	if err != nil {
+		zap.S().Error(err)
+		return model.NumberResp{}, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		zap.S().Error(err)
+		return model.NumberResp{}, err
+	}
+	var number form.NumberResp
+	fmt.Println(string(body))
+	err = json.Unmarshal(body, &number)
+	if err != nil {
+		return model.NumberResp{}, errors.New("图片目标识别错误")
+	}
+	return model.NumberResp{
+		Number: number.WordsResult.Number,
 	}, nil
 }

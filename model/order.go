@@ -63,6 +63,10 @@ type MoneyResp struct {
 	Money float64 `json:"money"`
 }
 
+type NumberResp struct {
+	Number string `json:"number"`
+}
+
 func (Charge) TableName() string {
 	return "charge"
 }
