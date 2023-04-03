@@ -42,15 +42,17 @@ func GetUserList(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"code":  1,
 			"count": 0,
 			"data":  nil,
-			"error": err.Error(),
+			"msg":   "获取失败，" + err.Error(),
 		})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
+			"code":  0,
 			"count": count,
 			"data":  data,
-			"error": "",
+			"msg":   "",
 		})
 	}
 }
@@ -67,12 +69,14 @@ func Register(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			"code": 1,
+			"msg":  "注册失败，" + err.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"error": "",
+		"code": 0,
+		"msg":  "注册成功",
 	})
 }
 
