@@ -336,8 +336,9 @@ func Recognize(image string) (model.NumberResp, error) {
 		return model.NumberResp{}, err
 	}
 	var number form.NumberResp
-	fmt.Println(string(body))
 	err = json.Unmarshal(body, &number)
+	zap.S().Info(number)
+	zap.S().Info(string(body))
 	if err != nil {
 		return model.NumberResp{}, errors.New("图片目标识别错误")
 	}
