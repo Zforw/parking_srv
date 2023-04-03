@@ -26,7 +26,15 @@ func CreateLicense(number string, openid string) error {
 		return errors.New("用户不存在")
 	}
 	if result := global.DB.Where("number=?", number).First(&license); result.RowsAffected != 0 {
-		return errors.New("车牌已存在")
+		user1 := model.User{}
+		global.DB.Where("open_id=?", "anonymous").First(&user)
+		if license.UserID != user1.ID {
+			return errors.New("车牌已存在")
+		}
+		license.UserID = user.ID
+		license.User = user
+		res := global.DB.Create(&license)
+		return res.Error
 	}
 	license.UserID = user.ID
 	license.User = user
