@@ -313,7 +313,7 @@ func GetAccessToken() string {
 }
 
 func Recognize(image string) (model.NumberResp, error) {
-	URL := "https://aip.baidubce.com/rest/2.0/ocr/v1/license_plate?access_token=" + TOKEN //GetAccessToken()
+	URL := "https://aip.baidubce.com/rest/2.0/ocr/v1/license_plate?access_token=" + GetAccessToken()
 	payload := strings.NewReader("image=" + url.QueryEscape(image))
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", URL, payload)
