@@ -291,6 +291,8 @@ func GetCharge() (model.ChargeResp, error) {
 const API_KEY = "jS5yvCqC2BzcBIScnxQid6jA"
 const SECRET_KEY = "hxczoXkqp2Plx0kInLiTewyxWn3Ssorv"
 
+var TOKEN string
+
 func GetAccessToken() string {
 	url := "https://aip.baidubce.com/oauth/2.0/token"
 	postData := fmt.Sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s", API_KEY, SECRET_KEY)

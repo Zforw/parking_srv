@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"parking/handler"
 	"parking/initialize"
 	"syscall"
 	"time"
@@ -23,6 +24,12 @@ func main() {
 		Handler: Router,
 	}
 	zap.S().Debugf("启动端口：%d", 35491)
+	go func() {
+		for {
+			time.Sleep(time.Hour)
+			handler.TOKEN = handler.GetAccessToken()
+		}
+	}()
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			zap.S().Fatalf("listen: %s\n", err)
