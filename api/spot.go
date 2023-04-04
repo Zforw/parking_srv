@@ -138,6 +138,25 @@ func FindBlock(ctx *gin.Context) {
 	}
 }
 
+func GetRemaining(ctx *gin.Context) {
+	zap.S().Info("【获取剩余车位】")
+	data, err := handler.GetRemaining()
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"code": 1,
+			"data": nil,
+			"msg":  "获取失败，" + err.Error(),
+		})
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{
+			"code": 0,
+			"data": data,
+			"msg":  "获取成功",
+		})
+	}
+}
+
 func GetBlockList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "10"))
