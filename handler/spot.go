@@ -50,6 +50,14 @@ func FindSpot(spotNo string) (model.SpotResp, error) {
 	return model.SpotResp{SpotNo: spot.SpotNo, BlockNo: block.BlockNo, Lat: block.Lat, Lgt: block.Lgt}, result.Error
 }
 
+func FindBlock(blockNo string) (model.BLockResp, error) {
+	block := model.Block{}
+	if result := global.DB.Where("block_no=?", blockNo).First(&block); result.RowsAffected == 0 {
+		return model.BLockResp{}, errors.New("停车区不存在")
+	}
+	return model.BLockResp{BlockNo: block.BlockNo, Lat: block.Lat, Lgt: block.Lgt}, nil
+}
+
 func UpdateSpot(spotNo, blockNo, newSpotNo, newBlockNo string) error {
 	block := model.Block{
 		BlockNo: blockNo,

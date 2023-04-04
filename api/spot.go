@@ -118,6 +118,26 @@ func FindSpot(ctx *gin.Context) {
 	}
 }
 
+func FindBlock(ctx *gin.Context) {
+	no := ctx.Query("blockNo")
+	zap.S().Info("【查找停车区】 blockNo=", no)
+	data, err := handler.FindBlock(no)
+	if err != nil {
+		zap.S().Error(err.Error())
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"code": 1,
+			"data": nil,
+			"msg":  "查找失败，" + err.Error(),
+		})
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{
+			"code": 0,
+			"data": data,
+			"msg":  "查找成功",
+		})
+	}
+}
+
 func GetBlockList(ctx *gin.Context) {
 	pn, _ := strconv.Atoi(ctx.DefaultQuery("pn", "0"))
 	pSize, _ := strconv.Atoi(ctx.DefaultQuery("psize", "10"))
