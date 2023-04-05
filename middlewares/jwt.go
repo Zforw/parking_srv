@@ -28,7 +28,6 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		zap.S().Info(token)
 		j := NewJWT()
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(token)
@@ -62,6 +61,7 @@ func JWTAuth() gin.HandlerFunc {
 		c.Set("claims", claims)
 		c.Set("authId", claims.AuthorityID)
 		c.Set("userId", claims.ID)
+		zap.S().Info("openId:", claims.ID)
 		c.Next()
 	}
 }
