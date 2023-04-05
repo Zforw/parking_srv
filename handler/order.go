@@ -63,7 +63,11 @@ func PayTime2Chn(p *time.Time) string {
 	}
 }
 
-func CreateOrder(number string, start time.Time) error {
+func CreateOrder(number, blockNo string, start time.Time) error {
+	b := model.Block{}
+	if result := global.DB.Where("block_no=?", number).First(&b); result.RowsAffected == 0 {
+		return errors.New("停车区不存在")
+	}
 	l := model.License{}
 	if result := global.DB.Where("number=?", number).First(&l); result.RowsAffected == 0 {
 		//return errors.New("车牌不存在")
@@ -78,7 +82,9 @@ func CreateOrder(number string, start time.Time) error {
 	}
 	o := model.OrderInfo{
 		UserID:    l.UserID,
-		User:      l.User,
+		User:      l.User, // l.User == nil
+		BlockID:   b.ID,
+		Block:     b,
 		OrderSn:   GenerateOrderSn(l.UserID),
 		Status:    "WAIT_BUYER_PAY",
 		StartTime: &start,
@@ -97,12 +103,13 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 	if year == 1000 {
 		var ordersCount int64
 		global.DB.Model(&model.OrderInfo{}).Count(&ordersCount)
-		result := global.DB.Preload("License").Scopes(Paginate(pn, psize)).Find(&oo)
+		result := global.DB.Preload("License").Preload("Block").Scopes(Paginate(pn, psize)).Find(&oo)
 		for _, v := range oo {
 			data = append(data, model.OrderResp{
 				OrderSn:       v.OrderSn,
 				PayType:       PayType2Chn(v.PayType),
 				Status:        Status2Chn(v.Status),
+				BlockNo:       v.Block.BlockNo,
 				OrderMount:    v.OrderMount,
 				StartTime:     PayTime2Chn(v.StartTime),
 				PayTime:       PayTime2Chn(v.PayTime),
@@ -112,7 +119,7 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 		count := ordersCount
 		return data, int(count), result.Error
 	} else {
-		result := global.DB.Preload("License").Find(&oo)
+		result := global.DB.Preload("License").Preload("Block").Find(&oo)
 		date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
 		nextDate := date.Add(time.Hour * 24)
 		for _, v := range oo {
@@ -121,6 +128,7 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 					OrderSn:       v.OrderSn,
 					PayType:       PayType2Chn(v.PayType),
 					Status:        Status2Chn(v.Status),
+					BlockNo:       v.Block.BlockNo,
 					OrderMount:    v.OrderMount,
 					StartTime:     PayTime2Chn(v.StartTime),
 					PayTime:       PayTime2Chn(v.PayTime),
@@ -155,12 +163,13 @@ func GetUserOrderList(pn, psize int, id string) ([]model.OrderResp, int, error) 
 	var data []model.OrderResp
 	localDB := global.DB
 	localDB = localDB.Where("user_id=?", u.ID)
-	result = localDB.Preload("License").Scopes(Paginate(pn, psize)).Find(&oo)
+	result = localDB.Preload("License").Preload("Block").Scopes(Paginate(pn, psize)).Find(&oo)
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
 			PayType:       PayType2Chn(v.PayType),
 			Status:        Status2Chn(v.Status),
+			BlockNo:       v.Block.BlockNo,
 			OrderMount:    v.OrderMount,
 			StartTime:     PayTime2Chn(v.StartTime),
 			PayTime:       PayTime2Chn(v.PayTime),
@@ -182,12 +191,13 @@ func GetLicenseOrderList(pn, psize int, number string) ([]model.OrderResp, int, 
 	var data []model.OrderResp
 	localDB := global.DB
 	localDB = localDB.Where("license_id=?", l.ID)
-	result := localDB.Preload("License").Scopes(Paginate(pn, psize)).Find(&oo)
+	result := localDB.Preload("License").Preload("Block").Scopes(Paginate(pn, psize)).Find(&oo)
 	for _, v := range oo {
 		data = append(data, model.OrderResp{
 			OrderSn:       v.OrderSn,
 			PayType:       PayType2Chn(v.PayType),
 			Status:        Status2Chn(v.Status),
+			BlockNo:       v.Block.BlockNo,
 			OrderMount:    v.OrderMount,
 			StartTime:     PayTime2Chn(v.StartTime),
 			PayTime:       PayTime2Chn(v.PayTime),

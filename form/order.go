@@ -1,7 +1,8 @@
 package form
 
 type CreateOrderForm struct {
-	Number string `json:"number" binding:"required"`
+	Number  string `json:"number" binding:"required"`
+	BlockNo string `json:"blockNo" binding:"required"`
 }
 
 type UpdateOrderForm struct {

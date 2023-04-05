@@ -28,6 +28,9 @@ type OrderInfo struct {
 	StartTime  *time.Time `gorm:"type:datetime"` //开始时间
 	PayTime    *time.Time `gorm:"type:datetime"` //结束时间
 
+	BlockID int32
+	Block   Block `gorm:"foreignKey:BlockID"`
+
 	LicenseID int32
 	License   License `gorm:"foreignKey:LicenseID"`
 }
@@ -40,6 +43,7 @@ type OrderResp struct {
 	StartTime     string  //开始时间
 	PayTime       string  //支付时间
 	LicenseNumber string
+	BlockNo       string
 }
 
 func (OrderInfo) TableName() string {
