@@ -65,7 +65,7 @@ func PayTime2Chn(p *time.Time) string {
 
 func CreateOrder(number, blockNo string, start time.Time) error {
 	b := model.Block{}
-	if result := global.DB.Where("block_no=?", number).First(&b); result.RowsAffected == 0 {
+	if result := global.DB.Where("block_no=?", blockNo).First(&b); result.RowsAffected == 0 {
 		return errors.New("停车区不存在")
 	}
 	l := model.License{}
