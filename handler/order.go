@@ -92,6 +92,8 @@ func CreateOrder(number, blockNo string, start time.Time) error {
 		License:   l,
 	}
 	l.Status = "IN"
+	l.BlockID = b.ID
+	l.Block = b
 	res := global.DB.Save(&l)
 	res = global.DB.Create(&o)
 	return res.Error

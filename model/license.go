@@ -3,21 +3,25 @@ package model
 // License 车牌
 type License struct {
 	BaseModel
-	Number string `gorm:"type:varchar(20)"` //车牌号
-	UserID int32
-	User   User   `gorm:"foreignKey:UserID"`
-	Status string `gorm:"type:varchar(20)  comment 'IN(进入), OUT(离开)'"`
+	Number  string `gorm:"type:varchar(20)"` //车牌号
+	UserID  int32
+	User    User `gorm:"foreignKey:UserID"`
+	BlockID int32
+	Block   Block  `gorm:"foreignKey:BlockID"`
+	Status  string `gorm:"type:varchar(20)  comment 'IN(进入), OUT(离开)'"`
 }
 
 type LicenseResp struct {
-	Number string `json:"number"`
-	OpenId string `json:"id"`
-	Status string `json:"status"`
+	Number  string `json:"number"`
+	OpenId  string `json:"id"`
+	Status  string `json:"status"`
+	BlockNo string `json:"blockNo"`
 }
 
 type UserLicenseResp struct {
-	Number string `json:"number"`
-	Status string `json:"status"`
+	Number  string `json:"number"`
+	Status  string `json:"status"`
+	BlockNo string `json:"blockNo"`
 }
 
 func (License) TableName() string {

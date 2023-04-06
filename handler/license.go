@@ -70,13 +70,14 @@ func UpdateLicense(number string, status string) error {
 
 func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
 	var licenses []model.License
-	result := global.DB.Preload("User").Scopes(Paginate(pn, psize)).Find(&licenses)
+	result := global.DB.Preload("User").Preload("Block").Scopes(Paginate(pn, psize)).Find(&licenses)
 	var data []model.LicenseResp
 	for _, v := range licenses {
 		data = append(data, model.LicenseResp{
-			Number: v.Number,
-			OpenId: v.User.OpenId,
-			Status: LStatus2Chn(v.Status),
+			Number:  v.Number,
+			OpenId:  v.User.OpenId,
+			Status:  LStatus2Chn(v.Status),
+			BlockNo: v.Block.BlockNo,
 		})
 	}
 	count := int(result.RowsAffected)
@@ -91,13 +92,14 @@ func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int,
 	zap.S().Debug(user)
 	localDB := global.DB
 	var licenses []model.License
-	result := localDB.Where("user_id=?", user.ID).Scopes(Paginate(pn, psize)).Find(&licenses)
+	result := localDB.Where("user_id=?", user.ID).Preload("Block").Scopes(Paginate(pn, psize)).Find(&licenses)
 	zap.S().Debug(licenses)
 	var data []model.UserLicenseResp
 	for _, v := range licenses {
 		data = append(data, model.UserLicenseResp{
-			Number: v.Number,
-			Status: LStatus2Chn(v.Status),
+			Number:  v.Number,
+			Status:  LStatus2Chn(v.Status),
+			BlockNo: v.Block.BlockNo,
 		})
 	}
 	count := int(result.RowsAffected)
