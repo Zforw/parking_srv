@@ -58,11 +58,13 @@ func FindBlock(blockNo string) (model.BLockResp, error) {
 	return model.BLockResp{BlockNo: block.BlockNo, Lat: block.Lat, Lgt: block.Lgt}, nil
 }
 
-func GetRemaining() (int, error) {
+func GetRemaining(no string) (int, error) {
+	var b model.Block
+	global.DB.Where("block_no=?", no).First(b)
 	var spotsCount int64
-	global.DB.Model(&model.Spot{}).Count(&spotsCount)
+	global.DB.Model(&model.Spot{}).Where("block_id=?", b.ID).Count(&spotsCount)
 	var ordersCount int64
-	result := global.DB.Model(&model.OrderInfo{}).Where("status=?", "WAIT_BUYER_PAY").Count(&ordersCount)
+	result := global.DB.Model(&model.OrderInfo{}).Where("status=? AND block_id=?", "WAIT_BUYER_PAY", b.ID).Count(&ordersCount)
 	return int(spotsCount - ordersCount), result.Error
 }
 

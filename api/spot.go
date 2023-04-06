@@ -140,7 +140,8 @@ func FindBlock(ctx *gin.Context) {
 
 func GetRemaining(ctx *gin.Context) {
 	zap.S().Info("【获取剩余车位】")
-	data, err := handler.GetRemaining()
+	no := ctx.Query("blockNo")
+	data, err := handler.GetRemaining(no)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
