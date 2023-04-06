@@ -60,7 +60,9 @@ func FindBlock(blockNo string) (model.BLockResp, error) {
 
 func GetRemaining(no string) (int, error) {
 	var b model.Block
-	global.DB.Where("block_no=?", no).First(b)
+	if result := global.DB.Where("block_no=?", no).First(b); result.RowsAffected == 0 {
+		return 0, errors.New("停车区不存在")
+	}
 	var spotsCount int64
 	global.DB.Model(&model.Spot{}).Where("block_id=?", b.ID).Count(&spotsCount)
 	var ordersCount int64
