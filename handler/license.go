@@ -15,6 +15,14 @@ func LStatus2Chn(status string) string {
 	}
 }
 
+func Block2(blockNo, status string) string {
+	if status == "OUT" {
+		return ""
+	} else {
+		return blockNo
+	}
+}
+
 func CreateLicense(number string, openid string) error {
 	user := model.User{
 		OpenId: openid,
@@ -77,7 +85,7 @@ func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
 			Number:  v.Number,
 			OpenId:  v.User.OpenId,
 			Status:  LStatus2Chn(v.Status),
-			BlockNo: v.Block.BlockNo,
+			BlockNo: Block2(v.Block.BlockNo, v.Status),
 		})
 	}
 	count := int(result.RowsAffected)
@@ -99,7 +107,7 @@ func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int,
 		data = append(data, model.UserLicenseResp{
 			Number:  v.Number,
 			Status:  LStatus2Chn(v.Status),
-			BlockNo: v.Block.BlockNo,
+			BlockNo: Block2(v.Block.BlockNo, v.Status),
 		})
 	}
 	count := int(result.RowsAffected)

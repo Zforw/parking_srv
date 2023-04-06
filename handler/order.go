@@ -222,6 +222,7 @@ func UpdateOrder(number, pay_type string) error {
 	}
 	o.PayType = pay_type
 	o.Status = "TRADE_SUCCESS"
+	l.Status = "OUT"
 	res := global.DB.Save(&o)
 	return res.Error
 }
