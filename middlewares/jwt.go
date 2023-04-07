@@ -15,6 +15,10 @@ func AdminAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		v, _ := c.Get("authId")
 		if v != 2 {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"code": 1,
+				"msg":  "您无权限执行此操作！",
+			})
 			c.Abort()
 			return
 		}
