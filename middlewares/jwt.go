@@ -21,16 +21,6 @@ func AdminAuth() gin.HandlerFunc {
 	}
 }
 
-func EmpAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		v, _ := c.Get("authId")
-		if v == 0 {
-			c.Abort()
-			return
-		}
-	}
-}
-
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 我们这里jwt鉴权取头部信息 x-token 登录时回返回token信息 这里前端需要把token存储到cookie或者本地localSstorage中
