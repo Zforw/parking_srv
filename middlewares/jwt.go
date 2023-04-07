@@ -14,7 +14,7 @@ import (
 func AdminAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		v, _ := c.Get("authId")
-		if v != 1 {
+		if v.(int) != 1 {
 			zap.S().Error(v)
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"code": 1,
