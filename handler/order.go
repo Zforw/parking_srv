@@ -109,7 +109,7 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 	if year == 1000 {
 		var ordersCount int64
 		global.DB.Model(&model.OrderInfo{}).Count(&ordersCount)
-		result := global.DB.Preload("License").Preload("User").Preload("Block").Scopes(Paginate(pn, psize)).Find(&oo)
+		result := global.DB.Preload("License").Preload("Emp").Preload("Block").Scopes(Paginate(pn, psize)).Find(&oo)
 		for _, v := range oo {
 			data = append(data, model.OrderResp{
 				OrderSn:       v.OrderSn,
@@ -126,7 +126,7 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 		count := ordersCount
 		return data, int(count), result.Error
 	} else {
-		result := global.DB.Preload("License").Preload("Block").Find(&oo)
+		result := global.DB.Preload("License").Preload("Emp").Preload("Block").Find(&oo)
 		date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
 		nextDate := date.Add(time.Hour * 24)
 		for _, v := range oo {
@@ -140,6 +140,7 @@ func GetOrderList(pn, psize, year, month, day int) ([]model.OrderResp, int, erro
 					StartTime:     PayTime2Chn(v.StartTime),
 					PayTime:       PayTime2Chn(v.PayTime),
 					LicenseNumber: v.License.Number,
+					Emp:           v.Emp.OpenId,
 				})
 			}
 		}
