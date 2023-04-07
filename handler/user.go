@@ -52,7 +52,7 @@ func GetUserList(pn, psize int) ([]model.UserResp, int, error) {
 	global.DB.Model(&model.User{}).Count(&userCount)
 	var users []model.User
 	result := Paginate(pn, psize)(global.DB).Find(&users)
-	mauth := map[int]string{0: "普通用户", 1: "管理员"}
+	mauth := map[int]string{0: "普通用户", 1: "管理员", 2: "工作人员"}
 	var data []model.UserResp
 	for _, v := range users {
 		data = append(data, model.UserResp{OpenId: v.OpenId, Auth: mauth[v.Auth]})
