@@ -75,7 +75,7 @@ func JWTAuth() gin.HandlerFunc {
 		c.Set("claims", claims)
 		c.Set("authId", claims.AuthorityID)
 		c.Set("userId", claims.ID)
-		zap.S().Info("openId:", claims.ID)
+		zap.S().Info("openId:", claims.ID, ",authId:", claims.AuthorityID)
 		c.Next()
 	}
 }
