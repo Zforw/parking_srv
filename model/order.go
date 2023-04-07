@@ -33,6 +33,9 @@ type OrderInfo struct {
 
 	LicenseID int32
 	License   License `gorm:"foreignKey:LicenseID"`
+
+	EmpID int32
+	Emp   User `gorm:"foreignKey:EmpID"`
 }
 
 type OrderResp struct {
@@ -44,6 +47,7 @@ type OrderResp struct {
 	PayTime       string  //支付时间
 	LicenseNumber string
 	BlockNo       string
+	Emp           string
 }
 
 func (OrderInfo) TableName() string {

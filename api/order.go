@@ -21,7 +21,8 @@ func CreateOrder(ctx *gin.Context) {
 		return
 	}
 	zap.S().Info("【创建订单】 ", o, st.Format("2006-01-02-15:04:05"))
-	err := handler.CreateOrder(o.Number, o.BlockNo, st)
+	v, _ := ctx.Get("userId")
+	err := handler.CreateOrder(o.Number, o.BlockNo, v.(string), st)
 	if err != nil {
 		zap.S().Error(err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
