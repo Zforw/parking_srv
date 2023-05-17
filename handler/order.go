@@ -96,8 +96,6 @@ func CreateOrder(number, blockNo, emp string, start time.Time) error {
 		Emp:       u,
 	}
 	l.Status = "IN"
-	l.BlockID = b.ID
-	l.Block = b
 	res := global.DB.Save(&l)
 	res = global.DB.Create(&o)
 	return res.Error
