@@ -82,10 +82,9 @@ func GetLicenseList(pn, psize int) ([]model.LicenseResp, int, error) {
 	var data []model.LicenseResp
 	for _, v := range licenses {
 		data = append(data, model.LicenseResp{
-			Number:  v.Number,
-			OpenId:  v.User.OpenId,
-			Status:  LStatus2Chn(v.Status),
-			BlockNo: Block2(v.Block.BlockNo, v.Status),
+			Number: v.Number,
+			OpenId: v.User.OpenId,
+			Status: LStatus2Chn(v.Status),
 		})
 	}
 	count := int(result.RowsAffected)
@@ -105,9 +104,8 @@ func GetUserLicenseList(id string, pn, psize int) ([]model.UserLicenseResp, int,
 	var data []model.UserLicenseResp
 	for _, v := range licenses {
 		data = append(data, model.UserLicenseResp{
-			Number:  v.Number,
-			Status:  LStatus2Chn(v.Status),
-			BlockNo: Block2(v.Block.BlockNo, v.Status),
+			Number: v.Number,
+			Status: LStatus2Chn(v.Status),
 		})
 	}
 	count := int(result.RowsAffected)
